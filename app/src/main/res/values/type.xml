@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Typography-->
+    <style name="TextAppearance.MyApp.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="fontFamily">@font/montserrat_alternates_semibold</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semibold</item>
+        <item name="android:textSize">97sp</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="fontFamily">@font/montserrat_alternates_semibold</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semibold</item>
+        <item name="android:textSize">61sp</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="fontFamily">@font/montserrat_alternates_bold</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_bold</item>
+        <item name="android:textSize">48sp</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Headline4" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="fontFamily">@font/montserrat_alternates_bold</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_bold</item>
+        <item name="android:textSize">34sp</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">@font/montserrat_alternates_semibold</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semibold</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/montserrat_alternates_medium</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_medium</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/montserrat_alternates</item>
+        <item name="android:fontFamily">@font/montserrat_alternates</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Subtitle2" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="fontFamily">@font/montserrat_alternates_medium</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_medium</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="fontFamily">@font/montserrat_alternates</item>
+        <item name="android:fontFamily">@font/montserrat_alternates</item>
+        <item name="android:textSize">16sp</item>
+        <item name="lineHeight">24sp</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Body2" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/montserrat_alternates</item>
+        <item name="android:fontFamily">@font/montserrat_alternates</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/montserrat_alternates_medium</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_medium</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="fontFamily">@font/montserrat_alternates</item>
+        <item name="android:fontFamily">@font/montserrat_alternates</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="TextAppearance.MyApp.Overline" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="fontFamily">@font/montserrat_alternates_semibold</item>
+        <item name="android:fontFamily">@font/montserrat_alternates_semibold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+</resources>

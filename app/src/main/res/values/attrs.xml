@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ds">
+        <attr name="emphasisHighAlpha" format="float" />
+        <attr name="emphasisMediumAlpha" format="float" />
+        <attr name="emphasisDisabledAlpha" format="float" />
+        <attr name="emphasisStrokeColorAlpha" format="float" />
+        <attr name="background_card_color" format="color" />
+    </declare-styleable>
+</resources>
