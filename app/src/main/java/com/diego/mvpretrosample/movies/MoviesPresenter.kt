@@ -15,7 +15,6 @@ class MoviesPresenter(
 ) : MoviesContract.Presenter {
 
     private val scope: CoroutineScope = CoroutineScope(context + SupervisorJob())
-
     private lateinit var currentMoviesResult: Flow<PagingData<Movie>>
 
     init {

@@ -27,18 +27,16 @@ data class Result(
 )
 
 // Convert NetworkMovies to List Movie
-fun NetworkMovies.asDomainModel(): List<Movie> {
-    return results?.map { result ->
+fun NetworkMovies.asDomainModel() =
+    results?.map { result ->
         processingItems(result)
     } ?: emptyList()
-}
 
 private fun processingItems(result: Result): Movie {
     return Movie(
-        id = result.id!!,
+        idMovie = result.id!!,
         title = result.title ?: "",
         posterPath = result.posterPath ?: "",
-        backdropPath = result.backdropPath ?: "",
         releaseDate = result.releaseDate ?: "",
         rating = result.voteAverage ?: -1.0
     )

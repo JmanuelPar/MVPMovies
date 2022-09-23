@@ -46,15 +46,15 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
     }
 
     override fun configure() {
+        binding.buttonRetry.setOnClickListener {
+            presenter.start()
+        }
+
         presenter = MovieDetailPresenter(
             repository = ServiceLocator.provideMoviesRepository(),
             movieDetailView = this,
             movieId = MovieDetailFragmentArgs.fromBundle(requireArguments()).movieId
         )
-
-        binding.buttonRetry.setOnClickListener {
-            presenter.start()
-        }
 
         presenter.start()
     }

@@ -45,7 +45,7 @@ class MovieAdapter(private val clickListener: MovieListener) :
     companion object {
         val MOVIE_DIFF_CALLBACK = object : DiffUtil.ItemCallback<Movie>() {
             override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean =
-                oldItem.id == newItem.id
+                oldItem.idMovie == newItem.idMovie
 
             override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean =
                 oldItem == newItem

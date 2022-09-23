@@ -10,6 +10,7 @@ import androidx.annotation.ColorInt
 import androidx.core.content.res.use
 import androidx.core.net.toUri
 import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.diego.mvpretrosample.R
 import com.diego.mvpretrosample.utils.Constants.API_BACKDROP_BASE_URL
 import java.time.LocalDate
@@ -32,9 +33,9 @@ fun ImageView.setMovieDetailImage(movieDetailImage: String) {
     val imgUri = (API_BACKDROP_BASE_URL + movieDetailImage).toUri()
         .buildUpon().scheme("https").build()
     this.load(imgUri) {
-        crossfade(true)
         placeholder(R.drawable.loading_animation)
         error(R.drawable.ic_place_holder)
+        transformations(RoundedCornersTransformation())
     }
 }
 
