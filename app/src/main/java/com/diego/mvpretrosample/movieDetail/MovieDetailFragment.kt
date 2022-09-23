@@ -46,15 +46,15 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
     }
 
     override fun configure() {
-        presenter = MovieDetailPresenter(
-            repository = ServiceLocator.provideMoviesRepository(),
-            movieDetailView = this,
-            movieId = MovieDetailFragmentArgs.fromBundle(requireArguments()).movieId
-        )
-
         binding.buttonRetry.setOnClickListener {
             presenter.start()
         }
+
+        presenter = MovieDetailPresenter(
+            repository = ServiceLocator.provideMoviesRepository(requireContext()),
+            movieDetailView = this,
+            movieId = MovieDetailFragmentArgs.fromBundle(requireArguments()).movieId
+        )
 
         presenter.start()
     }
@@ -75,13 +75,13 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
 
     override fun showMovieDetail(movieDetail: MovieDetail) {
         binding.apply {
-             movieImg.setMovieDetailImage(movieDetail.backdropPath)
-             movieRating.setMovieDetailRating(movieDetail.rating)
-             movieTitle.setMovieDetail(movieDetail.title)
-             movieReleaseDate.setMovieDetailReleaseDate(movieDetail.releaseDate)
-             movieGenres.setMovieDetail(movieDetail.genres)
-             movieTagline.setMovieDetail(movieDetail.tagLine)
-             movieOverview.setMovieDetail(movieDetail.overview)
+            movieImg.setMovieDetailImage(movieDetail.backdropPath)
+            movieRating.setMovieDetailRating(movieDetail.rating)
+            movieTitle.setMovieDetail(movieDetail.title)
+            movieReleaseDate.setMovieDetailReleaseDate(movieDetail.releaseDate)
+            movieGenres.setMovieDetail(movieDetail.genres)
+            movieTagline.setMovieDetail(movieDetail.tagLine)
+            movieOverview.setMovieDetail(movieDetail.overview)
         }
     }
 

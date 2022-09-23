@@ -26,20 +26,17 @@ data class Result(
     @Json(name = "vote_count") val voteCount: Int?
 )
 
-// Convert NetworkMovies to List Movie
-fun NetworkMovies.asDomainModel(): List<Movie> {
-    return results?.map { result ->
+// Convert NetworkMovies to List MovieDatabase
+fun NetworkMovies.asDatabaseModel() =
+    results?.map { result ->
         processingItems(result)
     } ?: emptyList()
-}
 
-private fun processingItems(result: Result): Movie {
-    return Movie(
-        id = result.id!!,
+private fun processingItems(result: Result) =
+    MovieDatabase(
+        idMovie = result.id!!,
         title = result.title ?: "",
         posterPath = result.posterPath ?: "",
-        backdropPath = result.backdropPath ?: "",
         releaseDate = result.releaseDate ?: "",
         rating = result.voteAverage ?: -1.0
     )
-}

@@ -27,7 +27,8 @@ class MovieDetailPresenter(
             movieDetailView.showLayoutResult(false)
             movieDetailView.showLayoutError(false)
             movieDetailView.showProgressBar(true)
-            when (val apiResult = repository.getMovieById(movieId = movieId)) {
+            when (val apiResult = repository.getMovieById(movieId)
+            ) {
                 is ApiResult.Success -> {
                     movieDetailView.showProgressBar(false)
                     movieDetailView.showLayoutResult(true)

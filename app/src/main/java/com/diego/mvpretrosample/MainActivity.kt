@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initPresenter() {
         moviesPresenter = MoviesPresenter(
-            repository = ServiceLocator.provideMoviesRepository(),
+            repository = ServiceLocator.provideMoviesRepository(this),
             moviesView = currentNavigationFragment as MoviesFragment?
                 ?: MoviesFragment.newInstance()
         )

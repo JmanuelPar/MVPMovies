@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.diego.mvpretrosample.R
 import com.diego.mvpretrosample.data.Movie
 import com.diego.mvpretrosample.utils.Constants.API_IMG_BASE_URL
@@ -17,9 +18,9 @@ fun ImageView.setMovieImage(item: Movie?) {
         val imgUri = (API_IMG_BASE_URL + movie.posterPath).toUri()
             .buildUpon().scheme("https").build()
         this.load(imgUri) {
-            crossfade(true)
             placeholder(R.drawable.loading_animation)
             error(R.drawable.ic_place_holder)
+            transformations(RoundedCornersTransformation())
         }
     }
 }

@@ -18,7 +18,6 @@ interface MoviesContract {
         fun showError(errorMessage: String)
         fun showErrorMessage(errorMessage: String)
         fun showLayoutError(visibility: Boolean)
-
     }
 
     interface Presenter : BasePresenter {
