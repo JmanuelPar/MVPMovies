@@ -167,7 +167,8 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
 
         val movieDetailCardTransitionName = getString(R.string.movie_detail_card_transition_name)
         (activity as MainActivity).navigateToWithExtras(
-            directions = MoviesFragmentDirections.actionFragmentMoviesToFragmentMovieDetail(movieId = movie.id),
+            directions = MoviesFragmentDirections
+                .actionFragmentMoviesToFragmentMovieDetail(movieId = movie.idMovie),
             extras = FragmentNavigatorExtras(view to movieDetailCardTransitionName)
         )
     }

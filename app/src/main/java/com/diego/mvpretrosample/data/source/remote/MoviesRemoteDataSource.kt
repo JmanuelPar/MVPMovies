@@ -18,7 +18,7 @@ class MoviesRemoteDataSource internal constructor(
     private val apiService: TmdbApiService
 ) : MoviesDataSource {
 
-    override fun getMovies(): Flow<PagingData<Movie>> =
+    override fun getMovies() =
         Pager(
             config = PagingConfig(
                 pageSize = NETWORK_TMDB_PAGE_SIZE,
@@ -29,7 +29,7 @@ class MoviesRemoteDataSource internal constructor(
             }
         ).flow
 
-    override suspend fun getMovieById(movieId: Int): ApiResult<MovieDetail> =
+    override suspend fun getMovieById(movieId: Int) =
         try {
             val movie = apiService.getMovieById(
                 movieId = movieId,

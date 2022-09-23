@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">Movies</string>
     <string name="detail">Détails</string>
     <string name="error_result_message">Oh Nooo, nous avons une erreur : \n%s</string>
