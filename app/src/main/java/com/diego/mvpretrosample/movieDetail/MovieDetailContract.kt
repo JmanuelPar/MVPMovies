@@ -17,7 +17,10 @@ interface MovieDetailContract {
     }
 
     interface Presenter : BasePresenter {
-        fun getMovieById()
+        fun getMovieDetail()
+        fun showProgress()
+        fun showSuccess(movieDetail: MovieDetail)
+        fun showError(exception: Exception)
         fun cleanUp()
     }
 }

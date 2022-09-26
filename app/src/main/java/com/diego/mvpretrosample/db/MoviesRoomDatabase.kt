@@ -4,24 +4,23 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.diego.mvpretrosample.data.MovieDatabase
 
 @Database(
     entities = [MovieDatabase::class, RemoteKeys::class],
     version = 1,
     exportSchema = true
 )
-abstract class MovieRoomDatabase : RoomDatabase() {
+abstract class MoviesRoomDatabase : RoomDatabase() {
 
-    abstract fun movieDao(): MovieDao
+    abstract fun moviesDao(): MoviesDao
     abstract fun remoteKeysDao(): RemoteKeysDao
 
     companion object {
 
         @Volatile
-        private var INSTANCE: MovieRoomDatabase? = null
+        private var INSTANCE: MoviesRoomDatabase? = null
 
-        fun getInstance(context: Context): MovieRoomDatabase =
+        fun getInstance(context: Context): MoviesRoomDatabase =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
@@ -29,7 +28,7 @@ abstract class MovieRoomDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(
                 context.applicationContext,
-                MovieRoomDatabase::class.java,
+                MoviesRoomDatabase::class.java,
                 "movies_database"
             ).build()
     }

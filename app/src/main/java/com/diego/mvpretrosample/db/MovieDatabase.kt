@@ -1,4 +1,4 @@
-package com.diego.mvpretrosample.data
+package com.diego.mvpretrosample.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

@@ -1,5 +1,6 @@
 package com.diego.mvpretrosample.data
 
+import com.diego.mvpretrosample.db.MovieDatabase
 import com.squareup.moshi.Json
 
 data class NetworkMovies(

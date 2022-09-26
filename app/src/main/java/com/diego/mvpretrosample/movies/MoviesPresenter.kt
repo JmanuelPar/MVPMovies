@@ -1,8 +1,6 @@
 package com.diego.mvpretrosample.movies
 
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
+import androidx.paging.*
 import com.diego.mvpretrosample.data.Movie
 import com.diego.mvpretrosample.repository.MoviesRepository
 import kotlinx.coroutines.*
@@ -31,17 +29,18 @@ class MoviesPresenter(
         when {
             this::currentMoviesResult.isInitialized -> showMoviesUI()
             else -> {
-                currentMoviesResult = repository.getMovies().map { pagingData ->
-                    pagingData.map { movieDatabase ->
-                        Movie(
-                            idMovie = movieDatabase.idMovie,
-                            title = movieDatabase.title,
-                            posterPath = movieDatabase.posterPath,
-                            releaseDate = movieDatabase.releaseDate,
-                            rating = movieDatabase.rating
-                        )
-                    }
-                }.cachedIn(scope)
+                currentMoviesResult = repository.getMovies()
+                    .map { pagingData ->
+                        pagingData.map { movieDatabase ->
+                            Movie(
+                                idMovie = movieDatabase.idMovie,
+                                title = movieDatabase.title,
+                                posterPath = movieDatabase.posterPath,
+                                releaseDate = movieDatabase.releaseDate,
+                                rating = movieDatabase.rating
+                            )
+                        }
+                    }.cachedIn(scope)
                 showMoviesUI()
             }
         }

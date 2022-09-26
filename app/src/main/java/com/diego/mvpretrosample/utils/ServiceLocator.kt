@@ -1,8 +1,8 @@
 package com.diego.mvpretrosample.utils
 
 import android.content.Context
-import com.diego.mvpretrosample.data.source.remote.MoviesRemoteDataSource
-import com.diego.mvpretrosample.db.MovieRoomDatabase
+import com.diego.mvpretrosample.data.source.remoteMediator.MoviesRemoteMediatorDataSource
+import com.diego.mvpretrosample.db.MoviesRoomDatabase
 import com.diego.mvpretrosample.network.TmdbApi
 import com.diego.mvpretrosample.repository.DefaultMoviesRepository
 import com.diego.mvpretrosample.repository.MoviesRepository
@@ -20,19 +20,19 @@ object ServiceLocator {
 
     private fun createMoviesRepository(context: Context): MoviesRepository {
         val newRepo = DefaultMoviesRepository(
-            moviesRemoteDataSource = createMoviesRemoteDataSource(context)
+            moviesRemoteMediatorDataSource = createMoviesRemoteMediatorDataSource(context)
         )
         moviesRepository = newRepo
         return newRepo
     }
 
-    private fun createMoviesRemoteDataSource(context: Context) =
-        MoviesRemoteDataSource(
+    private fun createMoviesRemoteMediatorDataSource(context: Context) =
+        MoviesRemoteMediatorDataSource(
             apiService = provideApiService(),
-            movieRoomDatabase = provideMovieDatabase(context)
+            moviesRoomDatabase = provideMoviesDatabase(context)
         )
 
     private fun provideApiService() = TmdbApi.retrofitService
 
-    private fun provideMovieDatabase(context: Context) = MovieRoomDatabase.getInstance(context)
+    private fun provideMoviesDatabase(context: Context) = MoviesRoomDatabase.getInstance(context)
 }

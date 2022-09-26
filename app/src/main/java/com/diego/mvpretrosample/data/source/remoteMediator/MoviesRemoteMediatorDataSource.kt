@@ -1,4 +1,4 @@
-package com.diego.mvpretrosample.data.source.remote
+package com.diego.mvpretrosample.data.source.remoteMediator
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
@@ -6,7 +6,7 @@ import androidx.paging.PagingConfig
 import com.diego.mvpretrosample.BuildConfig
 import com.diego.mvpretrosample.data.*
 import com.diego.mvpretrosample.data.source.MoviesDataSource
-import com.diego.mvpretrosample.db.MovieRoomDatabase
+import com.diego.mvpretrosample.db.MoviesRoomDatabase
 import com.diego.mvpretrosample.network.TmdbApiService
 import com.diego.mvpretrosample.utils.Constants.LANGUAGE
 import com.diego.mvpretrosample.utils.Constants.NETWORK_TMDB_PAGE_SIZE
@@ -14,9 +14,9 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 
-class MoviesRemoteDataSource internal constructor(
+class MoviesRemoteMediatorDataSource internal constructor(
     private val apiService: TmdbApiService,
-    private val movieRoomDatabase: MovieRoomDatabase
+    private val moviesRoomDatabase: MoviesRoomDatabase
 ) : MoviesDataSource {
 
     override fun getMovies() =
@@ -29,9 +29,9 @@ class MoviesRemoteDataSource internal constructor(
             ),
             remoteMediator = TmdbRemoteMediator(
                 apiService = apiService,
-                movieRoomDatabase = movieRoomDatabase
+                moviesRoomDatabase = moviesRoomDatabase
             ),
-            pagingSourceFactory = { movieRoomDatabase.movieDao().getMovies() }
+            pagingSourceFactory = { moviesRoomDatabase.moviesDao().getMovies() }
         ).flow
 
     override suspend fun getMovieById(movieId: Int) =

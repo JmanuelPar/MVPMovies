@@ -1,4 +1,4 @@
-package com.diego.mvpretrosample.data
+package com.diego.mvpretrosample.data.source.remoteMediator
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
@@ -6,7 +6,9 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.diego.mvpretrosample.BuildConfig
-import com.diego.mvpretrosample.db.MovieRoomDatabase
+import com.diego.mvpretrosample.data.asDatabaseModel
+import com.diego.mvpretrosample.db.MovieDatabase
+import com.diego.mvpretrosample.db.MoviesRoomDatabase
 import com.diego.mvpretrosample.db.RemoteKeys
 import com.diego.mvpretrosample.network.TmdbApiService
 import com.diego.mvpretrosample.utils.Constants.LANGUAGE
@@ -18,11 +20,11 @@ private const val TMDB_STARTING_PAGE_INDEX = 1
 @OptIn(ExperimentalPagingApi::class)
 class TmdbRemoteMediator(
     private val apiService: TmdbApiService,
-    private val movieRoomDatabase: MovieRoomDatabase
+    private val moviesRoomDatabase: MoviesRoomDatabase
 ) : RemoteMediator<Int, MovieDatabase>() {
 
-    private val movieDao = movieRoomDatabase.movieDao()
-    private val remoteKeysDao = movieRoomDatabase.remoteKeysDao()
+    private val moviesDao = moviesRoomDatabase.moviesDao()
+    private val remoteKeysDao = moviesRoomDatabase.remoteKeysDao()
 
     override suspend fun initialize(): InitializeAction {
         return InitializeAction.LAUNCH_INITIAL_REFRESH
@@ -60,11 +62,11 @@ class TmdbRemoteMediator(
             val moviesList = response.asDatabaseModel()
             val endOfPaginationReached = moviesList.isEmpty()
 
-            movieRoomDatabase.withTransaction {
+            moviesRoomDatabase.withTransaction {
                 // clear all tables in the database
                 if (loadType == LoadType.REFRESH) {
                     remoteKeysDao.clearRemoteKeys()
-                    movieDao.clearMovies()
+                    moviesDao.clearMovies()
                 }
 
                 val prevKey = if (page == TMDB_STARTING_PAGE_INDEX) null else page - 1
@@ -78,7 +80,7 @@ class TmdbRemoteMediator(
                 }
 
                 remoteKeysDao.insertAll(remoteKeys = keys)
-                movieDao.insertAll(movies = moviesList)
+                moviesDao.insertAll(movies = moviesList)
             }
 
             MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
