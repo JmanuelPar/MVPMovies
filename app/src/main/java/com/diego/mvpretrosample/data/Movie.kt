@@ -8,7 +8,8 @@ data class Movie(
     val rating: Double
 ) {
     override fun toString(): String {
-        return "\n Movie ----> \n id : $idMovie" +
+        return "\n Movie ----> " +
+                "\n idMovie : $idMovie" +
                 "\n title : $title" +
                 "\n posterPath : $posterPath" +
                 "\n releaseDate : $releaseDate" +

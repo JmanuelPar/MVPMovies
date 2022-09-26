@@ -17,7 +17,7 @@ data class MovieDetail(
     @ColumnInfo(name = "backdropPath") val backdropPath: String,
 ) {
     override fun toString(): String {
-        return "\n Movie ----> " +
+        return "\n MovieDetail ----> " +
                 "\n id : $id" +
                 "\n title : $title" +
                 "\n releaseDate : $releaseDate" +
