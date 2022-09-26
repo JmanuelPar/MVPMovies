@@ -67,6 +67,7 @@ fun NetworkMovieDetail.asDomainModel(): MovieDetail {
     } ?: ""
 
     return MovieDetail(
+        id = this.id!!,
         title = this.title ?: "",
         releaseDate = this.releaseDate ?: "",
         genres = genres,

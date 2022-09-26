@@ -1,8 +1,10 @@
 package com.diego.mvpretrosample.movieDetail
 
 import com.diego.mvpretrosample.data.ApiResult
+import com.diego.mvpretrosample.data.MovieDetail
 import com.diego.mvpretrosample.repository.MoviesRepository
 import kotlinx.coroutines.*
+import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 class MovieDetailPresenter(
@@ -19,27 +21,35 @@ class MovieDetailPresenter(
     }
 
     override fun start() {
-        getMovieById()
+        getMovieDetail()
     }
 
-    override fun getMovieById() {
+    override fun getMovieDetail() {
         scope.launch {
-            movieDetailView.showLayoutResult(false)
-            movieDetailView.showLayoutError(false)
-            movieDetailView.showProgressBar(true)
-            when (val apiResult = repository.getMovieById(movieId = movieId)) {
-                is ApiResult.Success -> {
-                    movieDetailView.showProgressBar(false)
-                    movieDetailView.showLayoutResult(true)
-                    movieDetailView.showMovieDetail(apiResult.data)
-                }
-                is ApiResult.Error -> {
-                    movieDetailView.showProgressBar(false)
-                    movieDetailView.showErrorMessage(apiResult.exception)
-                    movieDetailView.showLayoutError(true)
-                }
+            showProgress()
+            when (val apiResult = repository.getMovieById(movieId)) {
+                is ApiResult.Success -> showSuccess(apiResult.data)
+                is ApiResult.Error -> showError(apiResult.exception)
             }
         }
+    }
+
+    override fun showProgress() {
+        movieDetailView.showLayoutResult(false)
+        movieDetailView.showLayoutError(false)
+        movieDetailView.showProgressBar(true)
+    }
+
+    override fun showSuccess(movieDetail: MovieDetail) {
+        movieDetailView.showProgressBar(false)
+        movieDetailView.showLayoutResult(true)
+        movieDetailView.showMovieDetail(movieDetail)
+    }
+
+    override fun showError(exception: Exception) {
+        movieDetailView.showProgressBar(false)
+        movieDetailView.showErrorMessage(exception)
+        movieDetailView.showLayoutError(true)
     }
 
     override fun cleanUp() {

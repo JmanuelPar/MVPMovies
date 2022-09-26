@@ -21,6 +21,13 @@ android {
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
         buildConfigField "String","API_KEY","\"${properties.getProperty("API_KEY")}\""
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":
+                                      "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -38,6 +45,7 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs += ["-opt-in=kotlin.RequiresOptIn"]
     }
 
     buildFeatures {
@@ -79,7 +87,7 @@ dependencies {
 
     // Paging3
     implementation "androidx.paging:paging-runtime-ktx:3.1.1"
-    implementation "androidx.room:room-paging:2.4.3"
+    implementation("androidx.room:room-paging:2.4.3")
 
     // Timber
     implementation "com.jakewharton.timber:timber:5.0.1"
@@ -93,4 +101,9 @@ dependencies {
 
     // Coil
     implementation "io.coil-kt:coil:1.1.1"
+
+    // Room
+    implementation "androidx.room:room-runtime:2.4.3"
+    implementation "androidx.room:room-ktx:2.4.3"
+    kapt "androidx.room:room-compiler:2.4.3"
 }

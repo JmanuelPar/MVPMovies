@@ -34,6 +34,7 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
     private var _binding: FragmentMoviesBinding? = null
     private val binding get() = _binding!!
     private lateinit var movieAdapter: MovieAdapter
+    private lateinit var headerAdapter: MovieLoadStateAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,7 +65,7 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
     override fun configure() {
         val mRvMovies = binding.rvMovies
         movieAdapter = MovieAdapter(this)
-        val headerAdapter = MovieLoadStateAdapter { movieAdapter.retry() }
+        headerAdapter = MovieLoadStateAdapter { movieAdapter.retry() }
         val footerAdapter = MovieLoadStateAdapter { movieAdapter.retry() }
 
         mRvMovies.apply {
@@ -103,14 +104,24 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
     override fun showUI() {
         viewLifecycleOwner.lifecycleScope.launch {
             movieAdapter.loadStateFlow.collect { loadState ->
+
+                // Show a retry header if there was an error refreshing, and items were previously
+                // cached OR default to the default prepend state
+                headerAdapter.loadState = loadState.mediator
+                    ?.refresh
+                    ?.takeIf { it is LoadState.Error && movieAdapter.itemCount > 0 }
+                    ?: loadState.prepend
+
                 val isListEmpty =
                     loadState.refresh is LoadState.NotLoading && movieAdapter.itemCount == 0
-
-                showProgressBar(loadState.source.refresh is LoadState.Loading)
+                showProgressBar(loadState.mediator?.refresh is LoadState.Loading)
                 showLayoutNoResult(isListEmpty)
-                showRecyclerView(!isListEmpty)
+                showRecyclerView(
+                    loadState.source.refresh is LoadState.NotLoading
+                            || loadState.mediator?.refresh is LoadState.NotLoading
+                )
 
-                val errorState = loadState.refresh as? LoadState.Error
+                val errorState = loadState.mediator?.refresh as? LoadState.Error
                 errorState?.let { loadStateError ->
                     val errorMessage = when (loadStateError.error) {
                         is IOException -> getString(R.string.no_connect_message)
@@ -121,7 +132,7 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
                         else -> getString(R.string.error_result_message_unknown_retry)
                     }
 
-                    showError(errorMessage)
+                    if (movieAdapter.itemCount == 0) showError(errorMessage)
                 }
             }
         }
