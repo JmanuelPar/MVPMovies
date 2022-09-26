@@ -12,9 +12,8 @@ Material design
 Moshi  
 MVP  
 Navigation  
-Paging 3 with remote mediator  
+Paging 3  
 RecyclerView  
-Retrofit2  
-Splashscreen  
+Retrofit2
 Timber  
 View binding

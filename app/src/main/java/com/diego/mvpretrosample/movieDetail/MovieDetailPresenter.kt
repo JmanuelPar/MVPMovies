@@ -27,7 +27,7 @@ class MovieDetailPresenter(
     override fun getMovieDetail() {
         scope.launch {
             showProgress()
-            when (val apiResult = repository.getMovieById(movieId)) {
+            when (val apiResult = repository.getMovieById(movieId = movieId)) {
                 is ApiResult.Success -> showSuccess(apiResult.data)
                 is ApiResult.Error -> showError(apiResult.exception)
             }

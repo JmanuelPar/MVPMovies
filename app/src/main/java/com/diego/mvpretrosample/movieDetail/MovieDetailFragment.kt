@@ -51,7 +51,7 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
         }
 
         presenter = MovieDetailPresenter(
-            repository = ServiceLocator.provideMoviesRepository(requireContext()),
+            repository = ServiceLocator.provideMoviesRepository(),
             movieDetailView = this,
             movieId = MovieDetailFragmentArgs.fromBundle(requireArguments()).movieId
         )

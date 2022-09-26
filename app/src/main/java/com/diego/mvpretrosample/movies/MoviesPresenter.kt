@@ -5,7 +5,6 @@ import com.diego.mvpretrosample.data.Movie
 import com.diego.mvpretrosample.repository.MoviesRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlin.coroutines.CoroutineContext
 
 class MoviesPresenter(
@@ -29,18 +28,7 @@ class MoviesPresenter(
         when {
             this::currentMoviesResult.isInitialized -> showMoviesUI()
             else -> {
-                currentMoviesResult = repository.getMovies()
-                    .map { pagingData ->
-                        pagingData.map { movieDatabase ->
-                            Movie(
-                                idMovie = movieDatabase.idMovie,
-                                title = movieDatabase.title,
-                                posterPath = movieDatabase.posterPath,
-                                releaseDate = movieDatabase.releaseDate,
-                                rating = movieDatabase.rating
-                            )
-                        }
-                    }.cachedIn(scope)
+                currentMoviesResult = repository.getMovies().cachedIn(scope)
                 showMoviesUI()
             }
         }

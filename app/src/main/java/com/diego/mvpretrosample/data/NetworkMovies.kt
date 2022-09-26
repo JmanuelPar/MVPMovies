@@ -1,6 +1,5 @@
 package com.diego.mvpretrosample.data
 
-import com.diego.mvpretrosample.db.MovieDatabase
 import com.squareup.moshi.Json
 
 data class NetworkMovies(
@@ -27,14 +26,14 @@ data class Result(
     @Json(name = "vote_count") val voteCount: Int?
 )
 
-// Convert NetworkMovies to List MovieDatabase
-fun NetworkMovies.asDatabaseModel() =
+// Convert NetworkMovies to List Movie
+fun NetworkMovies.asDomainModel() =
     results?.map { result ->
         processingItems(result)
     } ?: emptyList()
 
 private fun processingItems(result: Result) =
-    MovieDatabase(
+    Movie(
         idMovie = result.id!!,
         title = result.title ?: "",
         posterPath = result.posterPath ?: "",
