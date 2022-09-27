@@ -11,6 +11,7 @@ import com.diego.mvpretrosample.data.Movie
 import com.diego.mvpretrosample.utils.Constants.API_IMG_BASE_URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 @BindingAdapter("movieImage")
 fun ImageView.setMovieImage(item: Movie?) {
@@ -38,7 +39,7 @@ fun TextView.setMovieReleaseDate(item: Movie?) {
         text = when {
             movie.releaseDate.isEmpty() -> context.getString(R.string.not_specified)
             else -> {
-                val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+                val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.FRANCE)
                 LocalDate.parse(movie.releaseDate, DateTimeFormatter.ISO_DATE).format(formatter)
             }
         }

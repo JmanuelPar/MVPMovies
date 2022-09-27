@@ -15,13 +15,14 @@ import com.diego.mvpretrosample.R
 import com.diego.mvpretrosample.utils.Constants.API_BACKDROP_BASE_URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 fun TextView.setMovieDetail(item: String) {
     text = item.ifEmpty { context.getString(R.string.not_specified) }
 }
 
 fun TextView.setMovieDetailReleaseDate(item: String) {
-    val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
+    val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.FRANCE)
     text = LocalDate.parse(item, DateTimeFormatter.ISO_DATE).format(formatter)
 }
 
