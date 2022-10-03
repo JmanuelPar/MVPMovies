@@ -59,21 +59,3 @@ data class SpokenLanguage(
     @Json(name = "iso_639_1") val iso6391: String?,
     @Json(name = "name") val name: String?
 )
-
-// Convert NetworkMovieDetail to MovieDetail
-fun NetworkMovieDetail.asDomainModel(): MovieDetail {
-    val genres = this.genres?.let { list ->
-        list.joinToString(separator = " - ") { genre -> "${genre.name}" }
-    } ?: ""
-
-    return MovieDetail(
-        id = this.id!!,
-        title = this.title ?: "",
-        releaseDate = this.releaseDate ?: "",
-        genres = genres,
-        tagLine = this.tagline ?: "",
-        overview = this.overview ?: "",
-        rating = this.voteAverage ?: -1.0,
-        backdropPath = this.backdropPath ?: ""
-    )
-}

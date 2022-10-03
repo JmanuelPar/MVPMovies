@@ -1,9 +1,14 @@
 package com.diego.mvpretrosample.movies
 
-import androidx.paging.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.diego.mvpretrosample.data.Movie
 import com.diego.mvpretrosample.repository.MoviesRepository
-import kotlinx.coroutines.*
+import com.diego.mvpretrosample.utils.transformAsMovie
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlin.coroutines.CoroutineContext
@@ -22,32 +27,31 @@ class MoviesPresenter(
     }
 
     override fun start() {
-        getMovies()
+        fetchMovies()
     }
 
-    override fun getMovies() {
+    override fun fetchMovies() {
         when {
-            this::currentMoviesResult.isInitialized -> showMoviesUI()
+            this::currentMoviesResult.isInitialized -> {
+                showMovies()
+                showUI()
+            }
             else -> {
                 currentMoviesResult = repository.getMovies()
                     .map { pagingData ->
-                        pagingData.map { movieDatabase ->
-                            Movie(
-                                idMovie = movieDatabase.idMovie,
-                                title = movieDatabase.title,
-                                posterPath = movieDatabase.posterPath,
-                                releaseDate = movieDatabase.releaseDate,
-                                rating = movieDatabase.rating
-                            )
-                        }
+                        pagingData.transformAsMovie()
                     }.cachedIn(scope)
-                showMoviesUI()
+                showMovies()
+                showUI()
             }
         }
     }
 
-    override fun showMoviesUI() {
+    override fun showMovies() {
         moviesView.showMovies(currentMoviesResult)
+    }
+
+    override fun showUI() {
         moviesView.showUI()
     }
 

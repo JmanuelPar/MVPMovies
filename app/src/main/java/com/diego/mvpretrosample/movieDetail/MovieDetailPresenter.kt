@@ -4,7 +4,6 @@ import com.diego.mvpretrosample.data.ApiResult
 import com.diego.mvpretrosample.data.MovieDetail
 import com.diego.mvpretrosample.repository.MoviesRepository
 import kotlinx.coroutines.*
-import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 class MovieDetailPresenter(
@@ -21,35 +20,25 @@ class MovieDetailPresenter(
     }
 
     override fun start() {
-        getMovieDetail()
+        fetchMovieDetail()
     }
 
-    override fun getMovieDetail() {
+    override fun fetchMovieDetail() {
         scope.launch {
-            showProgress()
-            when (val apiResult = repository.getMovieById(movieId)) {
-                is ApiResult.Success -> showSuccess(apiResult.data)
-                is ApiResult.Error -> showError(apiResult.exception)
-            }
+            showLoading()
+            val apiResult = repository.getMovieById(movieId)
+            showResult(apiResult)
         }
     }
 
-    override fun showProgress() {
+    override fun showLoading() {
         movieDetailView.showLayoutResult(false)
         movieDetailView.showLayoutError(false)
         movieDetailView.showProgressBar(true)
     }
 
-    override fun showSuccess(movieDetail: MovieDetail) {
-        movieDetailView.showProgressBar(false)
-        movieDetailView.showLayoutResult(true)
-        movieDetailView.showMovieDetail(movieDetail)
-    }
-
-    override fun showError(exception: Exception) {
-        movieDetailView.showProgressBar(false)
-        movieDetailView.showErrorMessage(exception)
-        movieDetailView.showLayoutError(true)
+    override fun showResult(apiResult: ApiResult<MovieDetail>) {
+        movieDetailView.showResult(apiResult)
     }
 
     override fun cleanUp() {

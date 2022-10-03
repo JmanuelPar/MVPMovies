@@ -1,5 +1,6 @@
 package com.diego.mvpretrosample.db
 
+import androidx.annotation.VisibleForTesting
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
@@ -17,4 +18,8 @@ interface MoviesDao {
 
     @Query("DELETE FROM movies")
     suspend fun clearMovies()
+
+    @VisibleForTesting
+    @Query("SELECT * FROM movies")
+    fun getListMovies(): List<MovieDatabase>
 }

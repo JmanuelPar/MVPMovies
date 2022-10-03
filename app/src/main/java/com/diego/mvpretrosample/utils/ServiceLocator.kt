@@ -1,6 +1,9 @@
 package com.diego.mvpretrosample.utils
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
+import androidx.room.Room
+import com.diego.mvpretrosample.data.source.remote.MoviesRemoteDataSource
 import com.diego.mvpretrosample.data.source.remoteMediator.MoviesRemoteMediatorDataSource
 import com.diego.mvpretrosample.db.MoviesRoomDatabase
 import com.diego.mvpretrosample.network.TmdbApi
@@ -9,8 +12,12 @@ import com.diego.mvpretrosample.repository.MoviesRepository
 
 object ServiceLocator {
 
+    private val lock = Any()
+    private var database: MoviesRoomDatabase? = null
+
     @Volatile
     var moviesRepository: MoviesRepository? = null
+        @VisibleForTesting set
 
     fun provideMoviesRepository(context: Context): MoviesRepository {
         synchronized(this) {
@@ -20,19 +27,46 @@ object ServiceLocator {
 
     private fun createMoviesRepository(context: Context): MoviesRepository {
         val newRepo = DefaultMoviesRepository(
+            moviesRemoteDataSource = createMoviesRemoteDataSource(),
             moviesRemoteMediatorDataSource = createMoviesRemoteMediatorDataSource(context)
         )
         moviesRepository = newRepo
         return newRepo
     }
 
-    private fun createMoviesRemoteMediatorDataSource(context: Context) =
-        MoviesRemoteMediatorDataSource(
-            apiService = provideApiService(),
-            moviesRoomDatabase = provideMoviesDatabase(context)
+    private fun createMoviesRemoteDataSource(): MoviesRemoteDataSource {
+        return MoviesRemoteDataSource(apiService = createApiService())
+    }
+
+    private fun createMoviesRemoteMediatorDataSource(context: Context): MoviesRemoteMediatorDataSource {
+        val moviesRoomDatabase = database ?: createMoviesDatabase(context)
+        return MoviesRemoteMediatorDataSource(
+            apiService = createApiService(),
+            moviesRoomDatabase = moviesRoomDatabase
         )
+    }
 
-    private fun provideApiService() = TmdbApi.retrofitService
+    private fun createApiService() = TmdbApi.retrofitService
 
-    private fun provideMoviesDatabase(context: Context) = MoviesRoomDatabase.getInstance(context)
+    private fun createMoviesDatabase(context: Context): MoviesRoomDatabase {
+        val result = Room.databaseBuilder(
+            context.applicationContext,
+            MoviesRoomDatabase::class.java,
+            "movies_database"
+        ).build()
+        database = result
+        return result
+    }
+
+    @VisibleForTesting
+    fun resetRepository() {
+        synchronized(lock) {
+            database?.apply {
+                clearAllTables()
+                close()
+            }
+            database = null
+            moviesRepository = null
+        }
+    }
 }
