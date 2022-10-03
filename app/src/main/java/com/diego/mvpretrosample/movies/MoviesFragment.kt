@@ -9,10 +9,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
-import com.diego.mvpretrosample.MainActivity
+import com.diego.mvpretrosample.MyApplication
 import com.diego.mvpretrosample.R
 import com.diego.mvpretrosample.adapter.MovieAdapter
 import com.diego.mvpretrosample.adapter.MovieListener
@@ -35,6 +36,14 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
     private val binding get() = _binding!!
     private lateinit var movieAdapter: MovieAdapter
     private lateinit var headerAdapter: MovieLoadStateAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        presenter = MoviesPresenter(
+            repository = (requireContext().applicationContext as MyApplication).moviesRepository,
+            moviesView = this
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -177,14 +186,10 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
         }
 
         val movieDetailCardTransitionName = getString(R.string.movie_detail_card_transition_name)
-        (activity as MainActivity).navigateToWithExtras(
+        this.findNavController().navigate(
             directions = MoviesFragmentDirections
                 .actionFragmentMoviesToFragmentMovieDetail(movieId = movie.idMovie),
-            extras = FragmentNavigatorExtras(view to movieDetailCardTransitionName)
+            navigatorExtras = FragmentNavigatorExtras(view to movieDetailCardTransitionName)
         )
-    }
-
-    companion object {
-        fun newInstance() = MoviesFragment()
     }
 }

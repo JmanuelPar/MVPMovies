@@ -6,12 +6,12 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.diego.mvpretrosample.BuildConfig
-import com.diego.mvpretrosample.data.asDatabaseModel
 import com.diego.mvpretrosample.db.MovieDatabase
 import com.diego.mvpretrosample.db.MoviesRoomDatabase
 import com.diego.mvpretrosample.db.RemoteKeys
 import com.diego.mvpretrosample.network.TmdbApiService
 import com.diego.mvpretrosample.utils.Constants.LANGUAGE
+import com.diego.mvpretrosample.utils.asDatabaseModel
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -31,8 +31,7 @@ class TmdbRemoteMediator(
     }
 
     override suspend fun load(
-        loadType: LoadType,
-        state: PagingState<Int, MovieDatabase>
+        loadType: LoadType, state: PagingState<Int, MovieDatabase>
     ): MediatorResult {
         return try {
             val page = when (loadType) {
@@ -55,9 +54,7 @@ class TmdbRemoteMediator(
             }
 
             val response = apiService.getPopularMovies(
-                apiKey = BuildConfig.API_KEY,
-                page = page,
-                language = LANGUAGE
+                apiKey = BuildConfig.API_KEY, page = page, language = LANGUAGE
             )
             val moviesList = response.asDatabaseModel()
             val endOfPaginationReached = moviesList.isEmpty()
@@ -73,9 +70,7 @@ class TmdbRemoteMediator(
                 val nextKey = if (endOfPaginationReached) null else page + 1
                 val keys = moviesList.map { movieDatabase ->
                     RemoteKeys(
-                        movieId = movieDatabase.idMovie,
-                        prevKey = prevKey,
-                        nextKey = nextKey
+                        movieId = movieDatabase.idMovie, prevKey = prevKey, nextKey = nextKey
                     )
                 }
 
@@ -95,9 +90,7 @@ class TmdbRemoteMediator(
     private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, MovieDatabase>): RemoteKeys? {
         // Get the last page that was retrieved, that contained items.
         // From that last page, get the last item
-        return state.pages
-            .lastOrNull { it.data.isNotEmpty() }
-            ?.data?.lastOrNull()
+        return state.pages.lastOrNull { it.data.isNotEmpty() }?.data?.lastOrNull()
             ?.let { movieDatabase ->
                 // Get the remote keys of the last item retrieved
                 remoteKeysDao.remoteKeysMovieId(movieDatabase.idMovie)
@@ -108,9 +101,7 @@ class TmdbRemoteMediator(
     private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, MovieDatabase>): RemoteKeys? {
         // Get the first page that was retrieved, that contained items.
         // From that first page, get the first item
-        return state.pages
-            .firstOrNull { it.data.isNotEmpty() }
-            ?.data?.firstOrNull()
+        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
             ?.let { movieDatabase ->
                 // Get the remote keys of the first items retrieved
                 remoteKeysDao.remoteKeysMovieId(movieDatabase.idMovie)

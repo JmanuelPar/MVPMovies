@@ -21,8 +21,9 @@ interface MoviesContract {
     }
 
     interface Presenter : BasePresenter {
-        fun getMovies()
-        fun showMoviesUI()
+        fun fetchMovies()
+        fun showMovies()
+        fun showUI()
         fun cleanup()
     }
 }

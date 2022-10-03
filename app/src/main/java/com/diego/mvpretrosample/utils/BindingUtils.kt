@@ -53,4 +53,3 @@ fun TextView.setMovieRating(item: Movie?) {
             if (movie.rating == -1.0) context.getString(R.string.not_rated) else movie.rating.toString()
     }
 }
-

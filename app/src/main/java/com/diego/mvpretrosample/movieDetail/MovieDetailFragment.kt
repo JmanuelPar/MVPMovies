@@ -2,22 +2,27 @@ package com.diego.mvpretrosample.movieDetail
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import retrofit2.HttpException
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
+import com.diego.mvpretrosample.MyApplication
 import com.diego.mvpretrosample.R
+import com.diego.mvpretrosample.data.ApiResult
 import com.diego.mvpretrosample.data.MovieDetail
 import com.diego.mvpretrosample.databinding.FragmentMovieDetailBinding
 import com.diego.mvpretrosample.utils.*
 import com.google.android.material.transition.MaterialContainerTransform
+import retrofit2.HttpException
 import java.io.IOException
 
 class MovieDetailFragment : Fragment(), MovieDetailContract.View {
 
     override lateinit var presenter: MovieDetailContract.Presenter
+
+    private val args: MovieDetailFragmentArgs by navArgs()
 
     private var _binding: FragmentMovieDetailBinding? = null
     private val binding get() = _binding!!
@@ -51,9 +56,9 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
         }
 
         presenter = MovieDetailPresenter(
-            repository = ServiceLocator.provideMoviesRepository(requireContext()),
+            repository = (requireContext().applicationContext as MyApplication).moviesRepository,
             movieDetailView = this,
-            movieId = MovieDetailFragmentArgs.fromBundle(requireArguments()).movieId
+            movieId = args.movieId
         )
 
         presenter.start()
@@ -65,6 +70,21 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
         super.onDestroy()
     }
 
+    override fun showResult(apiResult: ApiResult<MovieDetail>) {
+        when (apiResult) {
+            is ApiResult.Success -> {
+                showProgressBar(false)
+                showLayoutResult(true)
+                showMovieDetail(apiResult.data)
+            }
+            is ApiResult.Error -> {
+                showProgressBar(false)
+                showErrorMessage(apiResult.exception)
+                showLayoutError(true)
+            }
+        }
+    }
+
     override fun showProgressBar(visibility: Boolean) {
         binding.progressBar.isVisible = visibility
     }
@@ -73,15 +93,19 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
         binding.layoutResult.isVisible = visibility
     }
 
+    override fun showLayoutError(visibility: Boolean) {
+        binding.layoutError.isVisible = visibility
+    }
+
     override fun showMovieDetail(movieDetail: MovieDetail) {
         binding.apply {
-            movieImg.setMovieDetailImage(movieDetail.backdropPath)
-            movieRating.setMovieDetailRating(movieDetail.rating)
-            movieTitle.setMovieDetail(movieDetail.title)
-            movieReleaseDate.setMovieDetailReleaseDate(movieDetail.releaseDate)
-            movieGenres.setMovieDetail(movieDetail.genres)
-            movieTagline.setMovieDetail(movieDetail.tagLine)
-            movieOverview.setMovieDetail(movieDetail.overview)
+            movieDetailImg.setMovieDetailImage(movieDetail.backdropPath)
+            movieDetailRating.setMovieDetailRating(movieDetail.rating)
+            movieDetailTitle.setMovieDetail(movieDetail.title)
+            movieDetailReleaseDate.setMovieDetailReleaseDate(movieDetail.releaseDate)
+            movieDetailGenres.setMovieDetail(movieDetail.genres)
+            movieDetailTagline.setMovieDetail(movieDetail.tagLine)
+            movieDetailOverview.setMovieDetail(movieDetail.overview)
         }
     }
 
@@ -97,9 +121,5 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
                 )
             }
         }
-    }
-
-    override fun showLayoutError(visibility: Boolean) {
-        binding.layoutError.isVisible = visibility
     }
 }
