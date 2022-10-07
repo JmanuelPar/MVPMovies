@@ -60,26 +60,26 @@
             app:indicatorColor="?colorSecondary" />
 
         <ScrollView
-            android:id="@+id/layout_result"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarSize="1.0dp"
-            android:scrollbarThumbVertical="@color/color_on_surface_emphasis_disabled"
-            android:scrollbars="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:scrollbars="vertical">
 
             <LinearLayout
+                android:id="@+id/layout_result"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <ImageView
                     android:id="@+id/movie_detail_img"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="210dp"
+                    android:adjustViewBounds="true"
                     android:contentDescription="@string/movie_image"
                     tools:ignore="ImageContrastCheck"
+                    tools:scaleType="fitCenter"
                     tools:src="@drawable/ic_place_holder" />
 
                 <TextView
@@ -101,9 +101,9 @@
                     android:id="@+id/movie_detail_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="8dp"
                     android:gravity="center_horizontal"
                     android:textAppearance="?attr/textAppearanceHeadline5"
                     android:textColor="@color/color_on_surface_emphasis_high"
@@ -113,9 +113,9 @@
                     android:id="@+id/movie_detail_release_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="8dp"
                     android:gravity="center_horizontal"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/color_on_surface_emphasis_high"
@@ -125,9 +125,9 @@
                     android:id="@+id/movie_detail_genres"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="8dp"
                     android:gravity="center_horizontal"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="@color/color_on_surface_emphasis_high"
@@ -137,9 +137,9 @@
                     android:id="@+id/movie_detail_tagline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="8dp"
                     android:textAppearance="?attr/textAppearanceBody1"
                     android:textColor="@color/color_on_surface_emphasis_medium"
                     android:textStyle="italic"
@@ -148,9 +148,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/synopsis"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:textColor="@color/color_on_surface_emphasis_high" />
@@ -159,9 +159,9 @@
                     android:id="@+id/movie_detail_overview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="8dp"
                     android:paddingBottom="16dp"
                     android:textAppearance="?attr/textAppearanceBody1"
                     android:textColor="@color/color_on_surface_emphasis_high"

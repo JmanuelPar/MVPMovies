@@ -15,7 +15,6 @@ interface MoviesContract {
         fun showProgressBar(visibility: Boolean)
         fun showLayoutNoResult(visibility: Boolean)
         fun showRecyclerView(visibility: Boolean)
-        fun showError(errorMessage: String)
         fun showErrorMessage(errorMessage: String)
         fun showLayoutError(visibility: Boolean)
     }
@@ -24,6 +23,11 @@ interface MoviesContract {
         fun fetchMovies()
         fun showMovies()
         fun showUI()
+        fun showProgressBar(visibility: Boolean)
+        fun showLayoutNoResult(visibility: Boolean)
+        fun showRecyclerView(visibility: Boolean)
+        fun showErrorMessage(errorMessage: String)
+        fun showLayoutError(visibility: Boolean)
         fun cleanup()
     }
 }

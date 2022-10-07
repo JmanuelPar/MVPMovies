@@ -2,7 +2,10 @@ package com.diego.mvpretrosample.utils
 
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.diego.mvpretrosample.data.*
+import com.diego.mvpretrosample.data.Movie
+import com.diego.mvpretrosample.data.MovieDetail
+import com.diego.mvpretrosample.data.NetworkMovieDetail
+import com.diego.mvpretrosample.data.NetworkMovies
 import com.diego.mvpretrosample.db.MovieDatabase
 
 // Convert NetworkMovies to List MovieDatabase

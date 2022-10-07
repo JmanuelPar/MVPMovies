@@ -9,7 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -50,7 +51,7 @@ class MoviesPresenterTest {
         fakeMoviesRepository.setListMovieDatabase(listMovieDatabase)
         moviesPresenter = MoviesPresenter(
             repository = fakeMoviesRepository,
-            moviesView = moviesView
+            view = moviesView
         )
     }
 
@@ -60,7 +61,7 @@ class MoviesPresenterTest {
     }
 
     @Test
-    fun fetchMoviesAndShowSuccess() = runTest {
+    fun fetchMoviesAndShowMovies() = runTest {
         moviesPresenter.fetchMovies()
 
         val movieArgumentCaptor = argumentCaptor<Flow<PagingData<Movie>>>()

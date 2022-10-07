@@ -1,6 +1,8 @@
 package com.diego.mvpretrosample.data.source.remoteMediator
 
-import com.diego.mvpretrosample.data.*
+import com.diego.mvpretrosample.data.NetworkMovieDetail
+import com.diego.mvpretrosample.data.NetworkMovies
+import com.diego.mvpretrosample.data.Result
 import com.diego.mvpretrosample.network.TmdbApiService
 import java.io.IOException
 
@@ -24,7 +26,6 @@ class FakeTmdbApiService : TmdbApiService {
         val listResult =
             if (isEmptyList || totalPages <= page) emptyList()
             else createListResult(page)
-
         return NetworkMovies(
             page = page,
             results = listResult,

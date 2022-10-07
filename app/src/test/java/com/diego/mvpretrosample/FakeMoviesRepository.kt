@@ -12,7 +12,7 @@ class FakeMoviesRepository : MoviesRepository {
 
     private lateinit var listMovieDatabase: List<MovieDatabase>
     private lateinit var movieDetail: MovieDetail
-    var failureMsg: String? = null
+    var isIOException = false
 
     override fun getMovies() = flow {
         val pagingData = PagingData.from(listMovieDatabase)
@@ -20,11 +20,8 @@ class FakeMoviesRepository : MoviesRepository {
     }
 
     override suspend fun getMovieById(movieId: Int): ApiResult<MovieDetail> {
-        failureMsg?.let { errorMessage ->
-            return ApiResult.Error(exception = IOException(errorMessage))
-        }
-
-        return ApiResult.Success(data = movieDetail)
+        return if (isIOException) ApiResult.Error(exception = IOException())
+        else ApiResult.Success(data = movieDetail)
     }
 
     fun setListMovieDatabase(list: List<MovieDatabase>) {

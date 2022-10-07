@@ -38,10 +38,12 @@
             <ImageView
                 android:id="@+id/movie_img"
                 android:layout_width="match_parent"
-                android:layout_height="280dp"
+                android:layout_height="270dp"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/movie_image"
                 app:movieImage="@{movie}"
                 tools:ignore="ImageContrastCheck"
+                tools:scaleType="fitCenter"
                 tools:src="@drawable/ic_place_holder" />
 
             <TextView

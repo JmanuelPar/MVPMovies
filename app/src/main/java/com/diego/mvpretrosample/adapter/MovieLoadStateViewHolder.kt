@@ -26,10 +26,10 @@ class MovieLoadStateViewHolder(
             binding.errorMsg.text = when (loadState.error) {
                 is IOException -> binding.errorMsg.context.getString(R.string.no_connect_message)
                 is HttpException -> String.format(
-                    binding.errorMsg.context.getString(R.string.error_result_message),
+                    binding.errorMsg.context.getString(R.string.error_message),
                     loadState.error.localizedMessage
                 )
-                else -> binding.errorMsg.context.getString(R.string.error_result_message_unknown)
+                else -> binding.errorMsg.context.getString(R.string.error_message_unknown)
             }
         }
 

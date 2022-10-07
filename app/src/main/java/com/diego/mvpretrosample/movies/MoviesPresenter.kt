@@ -15,7 +15,7 @@ import kotlin.coroutines.CoroutineContext
 
 class MoviesPresenter(
     private val repository: MoviesRepository,
-    private val moviesView: MoviesContract.View,
+    private val view: MoviesContract.View,
     context: CoroutineContext = Dispatchers.Main.immediate
 ) : MoviesContract.Presenter {
 
@@ -23,7 +23,7 @@ class MoviesPresenter(
     private lateinit var currentMoviesResult: Flow<PagingData<Movie>>
 
     init {
-        moviesView.presenter = this
+        view.presenter = this
     }
 
     override fun start() {
@@ -48,11 +48,31 @@ class MoviesPresenter(
     }
 
     override fun showMovies() {
-        moviesView.showMovies(currentMoviesResult)
+        view.showMovies(currentMoviesResult)
     }
 
     override fun showUI() {
-        moviesView.showUI()
+        view.showUI()
+    }
+
+    override fun showProgressBar(visibility: Boolean) {
+        view.showProgressBar(visibility)
+    }
+
+    override fun showLayoutNoResult(visibility: Boolean) {
+        view.showLayoutNoResult(visibility)
+    }
+
+    override fun showRecyclerView(visibility: Boolean) {
+        view.showRecyclerView(visibility)
+    }
+
+    override fun showErrorMessage(errorMessage: String) {
+        view.showErrorMessage(errorMessage)
+    }
+
+    override fun showLayoutError(visibility: Boolean) {
+        view.showLayoutError(visibility)
     }
 
     override fun cleanup() {

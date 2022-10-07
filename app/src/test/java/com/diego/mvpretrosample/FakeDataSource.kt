@@ -5,12 +5,17 @@ import com.diego.mvpretrosample.data.ApiResult
 import com.diego.mvpretrosample.data.MovieDetail
 import com.diego.mvpretrosample.data.source.MoviesDataSource
 import com.diego.mvpretrosample.db.MovieDatabase
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import java.io.IOException
 
-class FakeDataSource(var movieDetail: MovieDetail?) : MoviesDataSource {
+class FakeDataSource(
+    private val list: List<MovieDatabase>,
+    private val movieDetail: MovieDetail?
+) : MoviesDataSource {
 
-    override fun getMovies(): Flow<PagingData<MovieDatabase>> {
-        TODO("Not yet implemented")
+    override fun getMovies() = flow {
+        if (list.isEmpty()) emit(PagingData.empty())
+        else emit(PagingData.from(list))
     }
 
     override suspend fun getMovieById(movieId: Int): ApiResult<MovieDetail> {
@@ -18,6 +23,6 @@ class FakeDataSource(var movieDetail: MovieDetail?) : MoviesDataSource {
             return ApiResult.Success(data = it)
         }
 
-        return ApiResult.Error(exception = Exception("We have an Exception"))
+        return ApiResult.Error(exception = IOException("We have an Exception"))
     }
 }
