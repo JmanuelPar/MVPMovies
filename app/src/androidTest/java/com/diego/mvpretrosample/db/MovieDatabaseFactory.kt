@@ -11,8 +11,8 @@ class MovieDatabaseFactory {
             id = id.toLong(),
             idMovie = id + 1,
             title = "title_$id",
-            posterPath = "",
-            releaseDate = "",
+            posterPath = "url_posterPath_$id",
+            releaseDate = "release_date_$id",
             rating = id.toDouble()
         )
     }

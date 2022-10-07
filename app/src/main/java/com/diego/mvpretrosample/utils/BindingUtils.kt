@@ -5,7 +5,6 @@ import android.widget.TextView
 import androidx.core.net.toUri
 import androidx.databinding.BindingAdapter
 import coil.load
-import coil.transform.RoundedCornersTransformation
 import com.diego.mvpretrosample.R
 import com.diego.mvpretrosample.data.Movie
 import com.diego.mvpretrosample.utils.Constants.API_IMG_BASE_URL
@@ -19,9 +18,20 @@ fun ImageView.setMovieImage(item: Movie?) {
         val imgUri = (API_IMG_BASE_URL + movie.posterPath).toUri()
             .buildUpon().scheme("https").build()
         this.load(imgUri) {
-            placeholder(R.drawable.loading_animation)
-            error(R.drawable.ic_place_holder)
-            transformations(RoundedCornersTransformation())
+            crossfade(true)
+            listener(
+                onStart = {
+                    scaleType = ImageView.ScaleType.FIT_CENTER
+                    setImageResource(R.drawable.loading_animation)
+                },
+                onSuccess = { _, _ ->
+                    scaleType = ImageView.ScaleType.FIT_XY
+                },
+                onError = { _, _ ->
+                    scaleType = ImageView.ScaleType.FIT_CENTER
+                    setImageResource(R.drawable.ic_place_holder)
+                }
+            )
         }
     }
 }
@@ -36,12 +46,16 @@ fun TextView.setMovieTitle(item: Movie?) {
 @BindingAdapter("movieReleaseDate")
 fun TextView.setMovieReleaseDate(item: Movie?) {
     item?.let { movie ->
-        text = when {
-            movie.releaseDate.isEmpty() -> context.getString(R.string.not_specified)
-            else -> {
-                val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.FRANCE)
-                LocalDate.parse(movie.releaseDate, DateTimeFormatter.ISO_DATE).format(formatter)
+        text = try {
+            when {
+                movie.releaseDate.isEmpty() -> context.getString(R.string.not_specified)
+                else -> {
+                    val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.FRANCE)
+                    LocalDate.parse(movie.releaseDate, DateTimeFormatter.ISO_DATE).format(formatter)
+                }
             }
+        } catch (e: Exception) {
+            context.getString(R.string.not_specified)
         }
     }
 }

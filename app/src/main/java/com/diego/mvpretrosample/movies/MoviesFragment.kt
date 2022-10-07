@@ -34,6 +34,7 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
 
     private var _binding: FragmentMoviesBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var movieAdapter: MovieAdapter
     private lateinit var headerAdapter: MovieLoadStateAdapter
 
@@ -41,7 +42,7 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
         super.onCreate(savedInstanceState)
         presenter = MoviesPresenter(
             repository = (requireContext().applicationContext as MyApplication).moviesRepository,
-            moviesView = this
+            view = this
         )
     }
 
@@ -97,7 +98,7 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
         }
 
         binding.buttonRetry.setOnClickListener {
-            showLayoutError(false)
+            presenter.showLayoutError(false)
             movieAdapter.retry()
         }
 
@@ -123,9 +124,10 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
 
                 val isListEmpty =
                     loadState.refresh is LoadState.NotLoading && movieAdapter.itemCount == 0
-                showProgressBar(loadState.mediator?.refresh is LoadState.Loading)
-                showLayoutNoResult(isListEmpty)
-                showRecyclerView(
+
+                presenter.showProgressBar(loadState.mediator?.refresh is LoadState.Loading)
+                presenter.showLayoutNoResult(isListEmpty)
+                presenter.showRecyclerView(
                     loadState.source.refresh is LoadState.NotLoading
                             || loadState.mediator?.refresh is LoadState.NotLoading
                 )
@@ -135,13 +137,16 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
                     val errorMessage = when (loadStateError.error) {
                         is IOException -> getString(R.string.no_connect_message)
                         is HttpException -> String.format(
-                            getString(R.string.error_result_message_retry),
+                            getString(R.string.error_message_retry),
                             loadStateError.error.localizedMessage
                         )
-                        else -> getString(R.string.error_result_message_unknown_retry)
+                        else -> getString(R.string.error_message_unknown_retry)
                     }
 
-                    if (movieAdapter.itemCount == 0) showError(errorMessage)
+                    if (movieAdapter.itemCount == 0) {
+                        presenter.showErrorMessage(errorMessage)
+                        presenter.showLayoutError(true)
+                    }
                 }
             }
         }
@@ -157,11 +162,6 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
 
     override fun showRecyclerView(visibility: Boolean) {
         binding.rvMovies.isVisible = visibility
-    }
-
-    override fun showError(errorMessage: String) {
-        showErrorMessage(errorMessage)
-        showLayoutError(true)
     }
 
     override fun showErrorMessage(errorMessage: String) {

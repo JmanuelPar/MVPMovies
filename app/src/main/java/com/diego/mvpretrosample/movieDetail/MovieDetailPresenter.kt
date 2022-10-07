@@ -3,20 +3,23 @@ package com.diego.mvpretrosample.movieDetail
 import com.diego.mvpretrosample.data.ApiResult
 import com.diego.mvpretrosample.data.MovieDetail
 import com.diego.mvpretrosample.repository.MoviesRepository
+import com.diego.mvpretrosample.utils.UIText
 import kotlinx.coroutines.*
+import retrofit2.HttpException
+import java.io.IOException
 import kotlin.coroutines.CoroutineContext
 
 class MovieDetailPresenter(
     private val repository: MoviesRepository,
-    private val movieDetailView: MovieDetailContract.View,
-    private val movieId: Int,
+    private val view: MovieDetailContract.View,
+    private val id: Int,
     context: CoroutineContext = Dispatchers.Main
 ) : MovieDetailContract.Presenter {
 
     private val scope: CoroutineScope = CoroutineScope(context + Job())
 
     init {
-        movieDetailView.presenter = this
+        view.presenter = this
     }
 
     override fun start() {
@@ -25,20 +28,54 @@ class MovieDetailPresenter(
 
     override fun fetchMovieDetail() {
         scope.launch {
-            showLoading()
-            val apiResult = repository.getMovieById(movieId)
-            showResult(apiResult)
+            showLayoutResult(false)
+            showLayoutError(false)
+            showProgressBar(true)
+
+            when (val response = repository.getMovieById(id)) {
+                is ApiResult.Success -> {
+                    showProgressBar(false)
+                    showMovieDetail(response.data)
+                    showLayoutResult(true)
+                }
+
+                is ApiResult.Error -> {
+                    val uiText = when (val exception = response.exception) {
+                        is IOException -> UIText.NoConnect
+                        is HttpException -> {
+                            exception.localizedMessage?.let {
+                                UIText.MessageException(it)
+                            } ?: UIText.UnknownError
+                        }
+                        else -> UIText.UnknownError
+                    }
+
+                    showProgressBar(false)
+                    showErrorMessage(uiText)
+                    showLayoutError(true)
+                }
+            }
         }
     }
 
-    override fun showLoading() {
-        movieDetailView.showLayoutResult(false)
-        movieDetailView.showLayoutError(false)
-        movieDetailView.showProgressBar(true)
+    override fun showProgressBar(visibility: Boolean) {
+        view.showProgressBar(visibility)
     }
 
-    override fun showResult(apiResult: ApiResult<MovieDetail>) {
-        movieDetailView.showResult(apiResult)
+    override fun showLayoutResult(visibility: Boolean) {
+        view.showLayoutResult(visibility)
+    }
+
+    override fun showLayoutError(visibility: Boolean) {
+        view.showLayoutError(visibility)
+    }
+
+    override fun showMovieDetail(movieDetail: MovieDetail) {
+        view.showMovieDetail(movieDetail)
+    }
+
+    override fun showErrorMessage(uiText: UIText) {
+        view.showErrorMessage(uiText)
     }
 
     override fun cleanUp() {

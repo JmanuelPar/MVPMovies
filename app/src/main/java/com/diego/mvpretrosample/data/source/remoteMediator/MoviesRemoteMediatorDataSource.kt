@@ -3,7 +3,8 @@ package com.diego.mvpretrosample.data.source.remoteMediator
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.diego.mvpretrosample.data.*
+import com.diego.mvpretrosample.data.ApiResult
+import com.diego.mvpretrosample.data.MovieDetail
 import com.diego.mvpretrosample.data.source.MoviesDataSource
 import com.diego.mvpretrosample.db.MoviesRoomDatabase
 import com.diego.mvpretrosample.network.TmdbApiService

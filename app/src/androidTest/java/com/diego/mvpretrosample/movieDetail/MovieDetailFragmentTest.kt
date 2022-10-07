@@ -32,13 +32,13 @@ class MovieDetailFragmentTest {
 
     private val movieDetail = MovieDetail(
         id = 1,
-        title = "title_movie_detail_test",
+        title = "title_1",
         releaseDate = "2022-01-01",
-        genres = "Genre 1 - Genre 2 - Genre 3",
-        tagLine = "tagline_test",
-        overview = "overview_test",
+        genres = "genres_1",
+        tagLine = "tagline_1",
+        overview = "overview_1",
         rating = 1.0,
-        backdropPath = ""
+        backdropPath = "url_backdropPath_1"
     )
 
     private val movieId = 1
@@ -52,7 +52,6 @@ class MovieDetailFragmentTest {
     @After
     fun cleanup() = runTest {
         ServiceLocator.resetRepository()
-        repository.haveException = false
     }
 
     @Test
@@ -93,7 +92,7 @@ class MovieDetailFragmentTest {
 
     @Test
     fun movieDetail_Error_DisplayedInUi() = runTest {
-        repository.haveException = true
+        repository.isIOException = true
 
         // IOException
         val errorMessageUi = context.getString(R.string.no_connect_message)

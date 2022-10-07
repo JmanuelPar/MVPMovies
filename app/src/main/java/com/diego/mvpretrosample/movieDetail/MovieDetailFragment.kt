@@ -10,13 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.diego.mvpretrosample.MyApplication
 import com.diego.mvpretrosample.R
-import com.diego.mvpretrosample.data.ApiResult
 import com.diego.mvpretrosample.data.MovieDetail
 import com.diego.mvpretrosample.databinding.FragmentMovieDetailBinding
 import com.diego.mvpretrosample.utils.*
 import com.google.android.material.transition.MaterialContainerTransform
-import retrofit2.HttpException
-import java.io.IOException
 
 class MovieDetailFragment : Fragment(), MovieDetailContract.View {
 
@@ -35,6 +32,12 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
             scrimColor = Color.TRANSPARENT
             setAllContainerColors(requireContext().themeColor(com.google.android.material.R.attr.colorSurface))
         }
+
+        presenter = MovieDetailPresenter(
+            repository = (requireContext().applicationContext as MyApplication).moviesRepository,
+            view = this,
+            id = args.movieId
+        )
     }
 
     override fun onCreateView(
@@ -55,12 +58,6 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
             presenter.start()
         }
 
-        presenter = MovieDetailPresenter(
-            repository = (requireContext().applicationContext as MyApplication).moviesRepository,
-            movieDetailView = this,
-            movieId = args.movieId
-        )
-
         presenter.start()
     }
 
@@ -68,21 +65,6 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
         _binding = null
         presenter.cleanUp()
         super.onDestroy()
-    }
-
-    override fun showResult(apiResult: ApiResult<MovieDetail>) {
-        when (apiResult) {
-            is ApiResult.Success -> {
-                showProgressBar(false)
-                showLayoutResult(true)
-                showMovieDetail(apiResult.data)
-            }
-            is ApiResult.Error -> {
-                showProgressBar(false)
-                showErrorMessage(apiResult.exception)
-                showLayoutError(true)
-            }
-        }
     }
 
     override fun showProgressBar(visibility: Boolean) {
@@ -109,17 +91,7 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
         }
     }
 
-    override fun showErrorMessage(exception: Exception) {
-        when (exception) {
-            is IOException -> {
-                binding.tvErrorMessage.text = getString(R.string.no_connect_message)
-            }
-            is HttpException -> {
-                binding.tvErrorMessage.text = String.format(
-                    getString(R.string.error_result_message),
-                    exception.localizedMessage
-                )
-            }
-        }
+    override fun showErrorMessage(uiText: UIText) {
+        binding.tvErrorMessage.text = requireContext().getMyUIText(uiText)
     }
 }

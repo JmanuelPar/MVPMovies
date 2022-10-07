@@ -43,7 +43,6 @@ class MoviesFragmentTest {
     @After
     fun cleanup() = runTest {
         ServiceLocator.resetRepository()
-        repository.haveException = false
     }
 
     @Test
@@ -76,9 +75,7 @@ class MoviesFragmentTest {
 
     @Test
     fun loadMovies_Empty_DisplayedInUi() = runTest {
-        val listMovieDatabase = emptyList<MovieDatabase>()
-
-        repository.setListMovieDatabase(listMovieDatabase)
+        repository.setListMovieDatabase(emptyList())
 
         launchFragmentInContainer<MoviesFragment>(
             themeResId = R.style.Theme_MVPRetroSample
@@ -93,7 +90,7 @@ class MoviesFragmentTest {
             id = 1,
             idMovie = 1,
             title = "title_1",
-            posterPath = "",
+            posterPath = "url_posterPath_1",
             releaseDate = "2022-01-01",
             rating = 1.0
         )
@@ -102,11 +99,11 @@ class MoviesFragmentTest {
             id = 1,
             title = "title_1",
             releaseDate = "2022-01-01",
-            genres = "Genre 1 - Genre 2 - Genre 3",
+            genres = "genres_1",
             tagLine = "tagline_1",
             overview = "overview_1",
             rating = 1.0,
-            backdropPath = ""
+            backdropPath = "url_backdropPath_1"
         )
 
         repository.setListMovieDatabase(listOf(movieDatabase))

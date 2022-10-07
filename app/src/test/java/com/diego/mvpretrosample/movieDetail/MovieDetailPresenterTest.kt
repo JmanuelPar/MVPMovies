@@ -1,9 +1,9 @@
 package com.diego.mvpretrosample.movieDetail
 
-import com.diego.mvpretrosample.MainCoroutineRule
-import com.diego.mvpretrosample.data.ApiResult
-import com.diego.mvpretrosample.data.MovieDetail
 import com.diego.mvpretrosample.FakeMoviesRepository
+import com.diego.mvpretrosample.MainCoroutineRule
+import com.diego.mvpretrosample.data.MovieDetail
+import com.diego.mvpretrosample.utils.UIText
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -26,7 +26,6 @@ class MovieDetailPresenterTest {
     private lateinit var fakeMoviesRepository: FakeMoviesRepository
     private lateinit var movieDetailPresenter: MovieDetailPresenter
     private lateinit var movieDetail: MovieDetail
-    private val messageException = "Exception error message"
 
     @ExperimentalCoroutinesApi
     @get:Rule
@@ -39,26 +38,26 @@ class MovieDetailPresenterTest {
         fakeMoviesRepository = FakeMoviesRepository()
         movieDetail = MovieDetail(
             id = 1,
-            title = "title_movie_detail_test",
-            releaseDate = "2022-01-01",
-            genres = "Genre 1 - Genre 2 - Genre 3",
-            tagLine = "tagline_test",
-            overview = "overview_test",
+            title = "title_1",
+            releaseDate = "release_date_1",
+            genres = "genres_1",
+            tagLine = "tagline_1",
+            overview = "overview_1",
             rating = 1.0,
-            backdropPath = ""
+            backdropPath = "url_backdropPath_1"
         )
 
         fakeMoviesRepository.setMovieDetail(movieDetail)
         movieDetailPresenter = MovieDetailPresenter(
             repository = fakeMoviesRepository,
-            movieDetailView = movieDetailView,
-            movieId = 1
+            view = movieDetailView,
+            id = 1
         )
     }
 
     @After
     fun tearDown() {
-        fakeMoviesRepository.failureMsg = null
+        fakeMoviesRepository.isIOException = false
     }
 
     @Test
@@ -68,7 +67,7 @@ class MovieDetailPresenterTest {
 
     @Test
     fun showLoadingToView() {
-        movieDetailPresenter.showLoading()
+        movieDetailPresenter.fetchMovieDetail()
 
         verify(movieDetailView).showLayoutResult(false)
         verify(movieDetailView).showLayoutError(false)
@@ -81,38 +80,48 @@ class MovieDetailPresenterTest {
     }
 
     @Test
-    fun fetchMovieDetailAndShowResultSuccess() = runTest {
+    fun showMovieDetailToView() {
         movieDetailPresenter.fetchMovieDetail()
 
-        val captor = argumentCaptor<ApiResult<MovieDetail>>()
-        verify(movieDetailView).showResult(captor.capture())
+        verify(movieDetailView).showProgressBar(false)
+        verify(movieDetailView).showLayoutResult(true)
 
-        assertEquals(
-            true,
-            captor.firstValue is ApiResult.Success
-        )
-
-        assertEquals(
-            movieDetail,
-            (captor.firstValue as ApiResult.Success).data
-        )
+        val inOrder = inOrder(movieDetailView)
+        inOrder.verify(movieDetailView).showProgressBar(false)
+        inOrder.verify(movieDetailView).showLayoutResult(true)
     }
 
     @Test
-    fun fetchMovieDetailAndShowResultError() = runTest {
-        fakeMoviesRepository.failureMsg = messageException
+    fun showLayoutErrorToView() {
+        fakeMoviesRepository.isIOException = true
         movieDetailPresenter.fetchMovieDetail()
 
-        val captor = argumentCaptor<ApiResult<MovieDetail>>()
-        verify(movieDetailView).showResult(captor.capture())
+        verify(movieDetailView).showProgressBar(false)
+        verify(movieDetailView).showLayoutError(false)
 
-        assertEquals(
-            true,
-            captor.firstValue is ApiResult.Error
-        )
-        assertEquals(
-            messageException,
-            (captor.firstValue as ApiResult.Error).exception.localizedMessage
-        )
+        val inOrder = inOrder(movieDetailView)
+        inOrder.verify(movieDetailView).showProgressBar(false)
+        inOrder.verify(movieDetailView).showLayoutError(true)
+    }
+
+    @Test
+    fun fetchMovieDetailAndShowMovieDetail() = runTest {
+        movieDetailPresenter.fetchMovieDetail()
+
+        val captor = argumentCaptor<MovieDetail>()
+        verify(movieDetailView).showMovieDetail(captor.capture())
+
+        assertEquals(movieDetail, captor.firstValue)
+    }
+
+    @Test
+    fun fetchMovieDetailAndShowErrorMsg() = runTest {
+        fakeMoviesRepository.isIOException = true
+        movieDetailPresenter.fetchMovieDetail()
+
+        val captor = argumentCaptor<UIText>()
+        verify(movieDetailView).showErrorMessage(captor.capture())
+
+        assertEquals(UIText.NoConnect, captor.firstValue)
     }
 }
