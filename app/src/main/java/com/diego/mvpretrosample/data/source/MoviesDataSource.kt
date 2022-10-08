@@ -11,4 +11,8 @@ interface MoviesDataSource {
     fun getMovies(): Flow<PagingData<MovieDatabase>>
 
     suspend fun getMovieById(movieId: Int): ApiResult<MovieDetail>
+
+    suspend fun insertMovieDetail(movieDetail: MovieDetail)
+
+    suspend fun getMovieDetailById(movieDetailId: Int): MovieDetail?
 }

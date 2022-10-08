@@ -3,8 +3,10 @@ package com.diego.mvpretrosample.utils
 import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.room.Room
+import com.diego.mvpretrosample.data.source.local.MoviesLocalDataSource
 import com.diego.mvpretrosample.data.source.remote.MoviesRemoteDataSource
 import com.diego.mvpretrosample.data.source.remoteMediator.MoviesRemoteMediatorDataSource
+import com.diego.mvpretrosample.db.MovieDetailDao
 import com.diego.mvpretrosample.db.MoviesRoomDatabase
 import com.diego.mvpretrosample.network.TmdbApi
 import com.diego.mvpretrosample.repository.DefaultMoviesRepository
@@ -26,9 +28,11 @@ object ServiceLocator {
     }
 
     private fun createMoviesRepository(context: Context): MoviesRepository {
+        val moviesRoomDatabase = database ?: createMoviesDatabase(context)
         val newRepo = DefaultMoviesRepository(
+            moviesLocalDataSource = createMoviesLocalDataSource(moviesRoomDatabase.movieDetailDao()),
             moviesRemoteDataSource = createMoviesRemoteDataSource(),
-            moviesRemoteMediatorDataSource = createMoviesRemoteMediatorDataSource(context)
+            moviesRemoteMediatorDataSource = createMoviesRemoteMediatorDataSource(moviesRoomDatabase)
         )
         moviesRepository = newRepo
         return newRepo
@@ -38,13 +42,14 @@ object ServiceLocator {
         return MoviesRemoteDataSource(apiService = createApiService())
     }
 
-    private fun createMoviesRemoteMediatorDataSource(context: Context): MoviesRemoteMediatorDataSource {
-        val moviesRoomDatabase = database ?: createMoviesDatabase(context)
-        return MoviesRemoteMediatorDataSource(
+    private fun createMoviesRemoteMediatorDataSource(moviesRoomDatabase: MoviesRoomDatabase) =
+        MoviesRemoteMediatorDataSource(
             apiService = createApiService(),
             moviesRoomDatabase = moviesRoomDatabase
         )
-    }
+
+    private fun createMoviesLocalDataSource(movieDetailDao: MovieDetailDao) =
+        MoviesLocalDataSource(movieDetailDao)
 
     private fun createApiService() = TmdbApi.retrofitService
 

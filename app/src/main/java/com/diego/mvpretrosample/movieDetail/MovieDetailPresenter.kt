@@ -32,8 +32,15 @@ class MovieDetailPresenter(
             showLayoutError(false)
             showProgressBar(true)
 
-            when (val response = repository.getMovieById(id)) {
+            val movieDetail = repository.getMovieDetailById(id)
+            movieDetail?.let {
+                showProgressBar(false)
+                showMovieDetail(it)
+                showLayoutResult(true)
+
+            } ?: when (val response = repository.getMovieById(id)) {
                 is ApiResult.Success -> {
+                    repository.insertMovieDetail(response.data)
                     showProgressBar(false)
                     showMovieDetail(response.data)
                     showLayoutResult(true)
