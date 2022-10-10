@@ -5,6 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.diego.mvpretrosample.data.MovieDetail
 import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -23,8 +24,20 @@ class MoviesRoomDatabaseTest : TestCase() {
     private lateinit var moviesRoomDatabase: MoviesRoomDatabase
     private lateinit var moviesDao: MoviesDao
     private lateinit var remoteKeysDao: RemoteKeysDao
+    private lateinit var movieDetailDao: MovieDetailDao
     private lateinit var listMovieDatabase: List<MovieDatabase>
     private lateinit var listRemotesKey: List<RemoteKeys>
+
+    private val movieDetail = MovieDetail(
+        id = 1,
+        title = "title_1",
+        releaseDate = "release_date_1",
+        genres = "genres_1",
+        tagLine = "tagline_1",
+        overview = "overview_1",
+        rating = 1.0,
+        backdropPath = "url_backdropPath_1"
+    )
 
     @Before
     public override fun setUp() {
@@ -36,6 +49,8 @@ class MoviesRoomDatabaseTest : TestCase() {
 
         moviesDao = moviesRoomDatabase.moviesDao()
         remoteKeysDao = moviesRoomDatabase.remoteKeysDao()
+        movieDetailDao = moviesRoomDatabase.movieDetailDao()
+
         val movieDatabaseFactory = MovieDatabaseFactory()
         val remoteKeysFactory = RemoteKeysFactory()
 
@@ -121,5 +136,22 @@ class MoviesRoomDatabaseTest : TestCase() {
         val listFromDb = remoteKeysDao.getListRemoteKeys()
 
         assertEquals(true, listFromDb.isEmpty())
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun insertMovieDetail() = runBlocking {
+        movieDetailDao.insert(movieDetail)
+        val movieDetailFromDb = movieDetailDao.getMovieDetailById(movieDetailId = movieDetail.id)
+
+        assertEquals(movieDetail, movieDetailFromDb)
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun getMovieDetailById_Null() = runBlocking {
+        val movieDetailFromDb = movieDetailDao.getMovieDetailById(movieDetailId = movieDetail.id)
+
+        assertEquals(null, movieDetailFromDb)
     }
 }

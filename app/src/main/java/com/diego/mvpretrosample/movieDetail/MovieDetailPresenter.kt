@@ -34,25 +34,33 @@ class MovieDetailPresenter(
 
             when (val response = repository.getMovieById(id)) {
                 is ApiResult.Success -> {
+                    repository.insertMovieDetail(response.data)
                     showProgressBar(false)
                     showMovieDetail(response.data)
                     showLayoutResult(true)
                 }
 
                 is ApiResult.Error -> {
-                    val uiText = when (val exception = response.exception) {
-                        is IOException -> UIText.NoConnect
-                        is HttpException -> {
-                            exception.localizedMessage?.let {
-                                UIText.MessageException(it)
-                            } ?: UIText.UnknownError
+                    val movieDetailDb = repository.getMovieDetailById(id)
+                    if (movieDetailDb != null) {
+                        showProgressBar(false)
+                        showMovieDetail(movieDetailDb)
+                        showLayoutResult(true)
+                    } else {
+                        val uiText = when (val exception = response.exception) {
+                            is IOException -> UIText.NoConnect
+                            is HttpException -> {
+                                exception.localizedMessage?.let {
+                                    UIText.MessageException(it)
+                                } ?: UIText.UnknownError
+                            }
+                            else -> UIText.UnknownError
                         }
-                        else -> UIText.UnknownError
-                    }
 
-                    showProgressBar(false)
-                    showErrorMessage(uiText)
-                    showLayoutError(true)
+                        showProgressBar(false)
+                        showErrorMessage(uiText)
+                        showLayoutError(true)
+                    }
                 }
             }
         }

@@ -25,7 +25,16 @@ class MovieDetailPresenterTest {
 
     private lateinit var fakeMoviesRepository: FakeMoviesRepository
     private lateinit var movieDetailPresenter: MovieDetailPresenter
-    private lateinit var movieDetail: MovieDetail
+    private val movieDetail = MovieDetail(
+        id = 1,
+        title = "title_1",
+        releaseDate = "release_date_1",
+        genres = "genres_1",
+        tagLine = "tagline_1",
+        overview = "overview_1",
+        rating = 1.0,
+        backdropPath = "url_backdropPath_1"
+    )
 
     @ExperimentalCoroutinesApi
     @get:Rule
@@ -36,28 +45,18 @@ class MovieDetailPresenterTest {
         MockitoAnnotations.openMocks(this)
 
         fakeMoviesRepository = FakeMoviesRepository()
-        movieDetail = MovieDetail(
-            id = 1,
-            title = "title_1",
-            releaseDate = "release_date_1",
-            genres = "genres_1",
-            tagLine = "tagline_1",
-            overview = "overview_1",
-            rating = 1.0,
-            backdropPath = "url_backdropPath_1"
-        )
-
         fakeMoviesRepository.setMovieDetail(movieDetail)
         movieDetailPresenter = MovieDetailPresenter(
             repository = fakeMoviesRepository,
             view = movieDetailView,
-            id = 1
+            id = movieDetail.id
         )
     }
 
     @After
     fun tearDown() {
         fakeMoviesRepository.isIOException = false
+        fakeMoviesRepository.clearMovieDetailDatabase()
     }
 
     @Test
@@ -92,16 +91,33 @@ class MovieDetailPresenterTest {
     }
 
     @Test
-    fun showLayoutErrorToView() {
+    fun showErrorToView() {
+        // No save MovieDetail in local database
         fakeMoviesRepository.isIOException = true
         movieDetailPresenter.fetchMovieDetail()
 
         verify(movieDetailView).showProgressBar(false)
-        verify(movieDetailView).showLayoutError(false)
+        verify(movieDetailView).showLayoutError(true)
 
         val inOrder = inOrder(movieDetailView)
         inOrder.verify(movieDetailView).showProgressBar(false)
         inOrder.verify(movieDetailView).showLayoutError(true)
+    }
+
+    @Test
+    fun showMovieDetailAfterErrorToView() {
+        // Save MovieDetail in local database
+        fakeMoviesRepository.addMovieDetailDatabase(movieDetail)
+        fakeMoviesRepository.isIOException = true
+
+        movieDetailPresenter.fetchMovieDetail()
+
+        verify(movieDetailView).showProgressBar(false)
+        verify(movieDetailView).showLayoutResult(true)
+
+        val inOrder = inOrder(movieDetailView)
+        inOrder.verify(movieDetailView).showProgressBar(false)
+        inOrder.verify(movieDetailView).showLayoutResult(true)
     }
 
     @Test
@@ -115,7 +131,22 @@ class MovieDetailPresenterTest {
     }
 
     @Test
+    fun fetchMovieDetailAndShowMovieDetailAfterError() = runTest {
+        // Save MovieDetail in local database
+        fakeMoviesRepository.addMovieDetailDatabase(movieDetail)
+        fakeMoviesRepository.isIOException = true
+
+        movieDetailPresenter.fetchMovieDetail()
+
+        val captor = argumentCaptor<MovieDetail>()
+        verify(movieDetailView).showMovieDetail(captor.capture())
+
+        assertEquals(movieDetail, captor.firstValue)
+    }
+
+    @Test
     fun fetchMovieDetailAndShowErrorMsg() = runTest {
+        // No save MovieDetail in local database
         fakeMoviesRepository.isIOException = true
         movieDetailPresenter.fetchMovieDetail()
 

@@ -33,4 +33,12 @@ class MoviesRemoteMediatorDataSource internal constructor(
     override suspend fun getMovieById(movieId: Int): ApiResult<MovieDetail> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun insertMovieDetail(movieDetail: MovieDetail) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getMovieDetailById(movieDetailId: Int): MovieDetail? {
+        TODO("Not yet implemented")
+    }
 }

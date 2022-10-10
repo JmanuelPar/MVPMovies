@@ -3,6 +3,7 @@ package com.diego.mvpretrosample.data.source.remote
 import androidx.paging.PagingData
 import com.diego.mvpretrosample.BuildConfig
 import com.diego.mvpretrosample.data.ApiResult
+import com.diego.mvpretrosample.data.MovieDetail
 import com.diego.mvpretrosample.data.source.MoviesDataSource
 import com.diego.mvpretrosample.db.MovieDatabase
 import com.diego.mvpretrosample.network.TmdbApiService
@@ -36,4 +37,12 @@ class MoviesRemoteDataSource internal constructor(
             Timber.e("HttpException on getMovieById : ${exception.localizedMessage}")
             ApiResult.Error(exception = exception)
         }
+
+    override suspend fun insertMovieDetail(movieDetail: MovieDetail) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getMovieDetailById(movieDetailId: Int): MovieDetail? {
+        TODO("Not yet implemented")
+    }
 }
