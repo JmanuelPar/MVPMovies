@@ -15,6 +15,7 @@ Navigation
 Paging 3 with remote mediator  
 RecyclerView  
 Retrofit2  
+Room  
 Splashscreen  
 Timber  
 View binding
