@@ -92,6 +92,7 @@ class MovieDetailFragmentTest {
 
     @Test
     fun movieDetail_Error_DisplayedInUi() = runTest {
+        // No save MovieDetail in local database
         repository.isIOException = true
 
         // IOException
@@ -109,5 +110,43 @@ class MovieDetailFragmentTest {
 
         onView(withId(R.id.tv_error_message)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_error_message)).check(matches(withText(errorMessageUi)))
+    }
+
+    @Test
+    fun movieDetail_AfterError_DisplayedInUi() = runTest {
+        // Save MovieDetail in local database
+        repository.addMovieDetailDatabase(movieDetail)
+        repository.isIOException = true
+
+        val bundle = MovieDetailFragmentArgs(movieId).toBundle()
+        launchFragmentInContainer<MovieDetailFragment>(
+            fragmentArgs = bundle,
+            themeResId = R.style.Theme_MVPRetroSample
+        )
+
+        onView(withId(R.id.layout_error)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.progress_bar)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.layout_result)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.movie_detail_img)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.movie_detail_rating)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_detail_rating)).check(matches(withText(movieDetail.rating.toString())))
+
+        onView(withId(R.id.movie_detail_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_detail_title)).check(matches(withText(movieDetail.title)))
+
+        // On Ui : 2022-01-01 -> 01 janvier 2022
+        onView(withId(R.id.movie_detail_release_date)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_detail_release_date)).check(matches(withText("01 janvier 2022")))
+
+        onView(withId(R.id.movie_detail_genres)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_detail_genres)).check(matches(withText(movieDetail.genres)))
+
+        onView(withId(R.id.movie_detail_tagline)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_detail_tagline)).check(matches(withText(movieDetail.tagLine)))
+
+        onView(withId(R.id.movie_detail_overview)).check(matches(isDisplayed()))
+        onView(withId(R.id.movie_detail_overview)).check(matches(withText(movieDetail.overview)))
     }
 }

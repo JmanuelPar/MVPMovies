@@ -11,7 +11,9 @@ import java.io.IOException
 class FakeMoviesRepository : MoviesRepository {
 
     private lateinit var listMovieDatabase: List<MovieDatabase>
+    private var listMovieDetailDatabase = mutableListOf<MovieDetail>()
     private lateinit var movieDetail: MovieDetail
+
     var isIOException = false
 
     override fun getMovies() = flow {
@@ -24,11 +26,33 @@ class FakeMoviesRepository : MoviesRepository {
         else ApiResult.Success(data = movieDetail)
     }
 
+    override suspend fun insertMovieDetail(movieDetail: MovieDetail) {
+        listMovieDetailDatabase.add(movieDetail)
+    }
+
+    override suspend fun getMovieDetailById(movieDetailId: Int): MovieDetail? {
+        listMovieDetailDatabase.firstOrNull {
+            it.id == movieDetailId
+        }?.let {
+            return it
+        }
+
+        return null
+    }
+
     fun setListMovieDatabase(list: List<MovieDatabase>) {
         listMovieDatabase = list
     }
 
     fun setMovieDetail(item: MovieDetail) {
         movieDetail = item
+    }
+
+    fun addMovieDetailDatabase(movieDetail: MovieDetail) {
+        listMovieDetailDatabase.add(movieDetail)
+    }
+
+    fun clearMovieDetailDatabase() {
+        listMovieDetailDatabase.clear()
     }
 }

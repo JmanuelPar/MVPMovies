@@ -19,6 +19,7 @@ import org.junit.Test
 class DefaultMoviesRepositoryTest {
 
     private lateinit var listMovieDatabase: List<MovieDatabase>
+    private lateinit var listMovieDetailDatabase: List<MovieDetail>
     private val movieDetail = MovieDetail(
         id = 1,
         title = "title_1",
@@ -28,6 +29,17 @@ class DefaultMoviesRepositoryTest {
         overview = "overview_1",
         rating = 1.0,
         backdropPath = "url_backdropPath_1"
+    )
+
+    private val newMovieDetail = MovieDetail(
+        id = 3,
+        title = "title_3",
+        releaseDate = "release_date_3",
+        genres = "genres_3",
+        tagLine = "tagline_3",
+        overview = "overview_3",
+        rating = 3.0,
+        backdropPath = "url_backdropPath_3"
     )
 
     private val errorMsg = "We have an Exception"
@@ -49,9 +61,28 @@ class DefaultMoviesRepositoryTest {
             movieDatabaseFactory.createMovieDatabase()
         )
 
+        val movieDetailFactory = MovieDetailFactory()
+        listMovieDetailDatabase = listOf(
+            movieDetailFactory.createMovieDetail(),
+            movieDetailFactory.createMovieDetail()
+        )
+
         moviesRepository = DefaultMoviesRepository(
-            moviesRemoteDataSource = FakeDataSource(listMovieDatabase, movieDetail),
-            moviesRemoteMediatorDataSource = FakeDataSource(listMovieDatabase, movieDetail),
+            moviesLocalDataSource = FakeDataSource(
+                listMovieDatabase,
+                movieDetail,
+                listMovieDetailDatabase.toMutableList()
+            ),
+            moviesRemoteDataSource = FakeDataSource(
+                listMovieDatabase,
+                movieDetail,
+                listMovieDetailDatabase.toMutableList()
+            ),
+            moviesRemoteMediatorDataSource = FakeDataSource(
+                listMovieDatabase,
+                movieDetail,
+                listMovieDetailDatabase.toMutableList()
+            ),
             ioDispatcher = Dispatchers.Main
         )
     }
@@ -76,9 +107,10 @@ class DefaultMoviesRepositoryTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getMovies_fromRemoteDataSourceEmpty() = runTest {
+    fun getMovies_fromRemoteMediatorDataSourceEmpty() = runTest {
         val moviesEmpty = FakeDataSource(emptyList(), movieDetail)
         moviesRepository = DefaultMoviesRepository(
+            moviesLocalDataSource = moviesEmpty,
             moviesRemoteDataSource = moviesEmpty,
             moviesRemoteMediatorDataSource = moviesEmpty,
             ioDispatcher = Dispatchers.Main
@@ -111,6 +143,7 @@ class DefaultMoviesRepositoryTest {
     fun getMovieById_fromRemoteDataSourceError() = runTest {
         val movieDetailNull = FakeDataSource(listMovieDatabase, null)
         moviesRepository = DefaultMoviesRepository(
+            moviesLocalDataSource = movieDetailNull,
             moviesRemoteDataSource = movieDetailNull,
             moviesRemoteMediatorDataSource = movieDetailNull,
             ioDispatcher = Dispatchers.Main
@@ -125,6 +158,7 @@ class DefaultMoviesRepositoryTest {
     fun getMovieById_fromRemoteDataSourceErrorMessage() = runTest {
         val movieDetailNull = FakeDataSource(listMovieDatabase, null)
         moviesRepository = DefaultMoviesRepository(
+            moviesLocalDataSource = movieDetailNull,
             moviesRemoteDataSource = movieDetailNull,
             moviesRemoteMediatorDataSource = movieDetailNull,
             ioDispatcher = Dispatchers.Main
@@ -134,5 +168,33 @@ class DefaultMoviesRepositoryTest {
                     as ApiResult.Error).exception.localizedMessage
 
         assertEquals(errorMsg, errorMsgRepo)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun insertMovieDetail_fromLocalDataSource() = runTest {
+        moviesRepository.insertMovieDetail(newMovieDetail)
+
+        val movieDetailDb = moviesRepository.getMovieDetailById(newMovieDetail.id)
+
+        assertEquals(newMovieDetail, movieDetailDb)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun getMovieDetailById_fromLocalDataSourceNull() = runTest {
+        val movieDetailDb = moviesRepository.getMovieDetailById(newMovieDetail.id)
+
+        assertEquals(null, movieDetailDb)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun getMovieDetailById_fromLocalDataSource() = runTest {
+        // get first MovieDetail in MovieDetail database
+        val movieDetailInDb = listMovieDetailDatabase[0]
+        val movieDetailFromDb = moviesRepository.getMovieDetailById(movieDetailInDb.id)
+
+        assertEquals(movieDetailInDb, movieDetailFromDb)
     }
 }

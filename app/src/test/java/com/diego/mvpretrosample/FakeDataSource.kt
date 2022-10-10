@@ -9,13 +9,14 @@ import kotlinx.coroutines.flow.flow
 import java.io.IOException
 
 class FakeDataSource(
-    private val list: List<MovieDatabase>,
-    private val movieDetail: MovieDetail?
+    private val listMovieDatabase: List<MovieDatabase>,
+    private val movieDetail: MovieDetail?,
+    private var listMovieDetailDatabase: MutableList<MovieDetail> = mutableListOf()
 ) : MoviesDataSource {
 
     override fun getMovies() = flow {
-        if (list.isEmpty()) emit(PagingData.empty())
-        else emit(PagingData.from(list))
+        if (listMovieDatabase.isEmpty()) emit(PagingData.empty())
+        else emit(PagingData.from(listMovieDatabase))
     }
 
     override suspend fun getMovieById(movieId: Int): ApiResult<MovieDetail> {
@@ -24,5 +25,17 @@ class FakeDataSource(
         }
 
         return ApiResult.Error(exception = IOException("We have an Exception"))
+    }
+
+    override suspend fun insertMovieDetail(movieDetail: MovieDetail) {
+        listMovieDetailDatabase.add(movieDetail)
+    }
+
+    override suspend fun getMovieDetailById(movieDetailId: Int): MovieDetail? {
+        listMovieDetailDatabase.firstOrNull { it.id == movieDetailId }?.let {
+            return it
+        }
+
+        return null
     }
 }
