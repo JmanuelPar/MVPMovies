@@ -10,6 +10,7 @@
                 <map>
                   <entry key="API_30_Appli" value="120" />
                   <entry key="Duration" value="90" />
+                  <entry key="Pixel_4_API_32" value="120" />
                   <entry key="Pixel_5_API_31" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
@@ -62,6 +63,7 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="Pixel_4_API_32" value="120" />
                   <entry key="Pixel_5_API_31" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
@@ -76,6 +78,7 @@
                 <map>
                   <entry key="API_30_Appli" value="120" />
                   <entry key="Duration" value="90" />
+                  <entry key="Pixel_4_API_32" value="120" />
                   <entry key="Pixel_5_API_31" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
@@ -89,6 +92,7 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="Pixel_4_API_32" value="120" />
                   <entry key="Pixel_5_API_31" value="120" />
                   <entry key="Tests" value="360" />
                 </map>

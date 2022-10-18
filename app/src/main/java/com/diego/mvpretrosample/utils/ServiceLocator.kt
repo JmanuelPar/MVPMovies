@@ -38,6 +38,9 @@ object ServiceLocator {
         return newRepo
     }
 
+    private fun createMoviesLocalDataSource(movieDetailDao: MovieDetailDao) =
+        MoviesLocalDataSource(movieDetailDao)
+
     private fun createMoviesRemoteDataSource(): MoviesRemoteDataSource {
         return MoviesRemoteDataSource(apiService = createApiService())
     }
@@ -47,9 +50,6 @@ object ServiceLocator {
             apiService = createApiService(),
             moviesRoomDatabase = moviesRoomDatabase
         )
-
-    private fun createMoviesLocalDataSource(movieDetailDao: MovieDetailDao) =
-        MoviesLocalDataSource(movieDetailDao)
 
     private fun createApiService() = TmdbApi.retrofitService
 

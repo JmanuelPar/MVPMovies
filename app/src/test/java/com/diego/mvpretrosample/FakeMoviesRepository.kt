@@ -13,8 +13,7 @@ class FakeMoviesRepository : MoviesRepository {
     private lateinit var listMovieDatabase: List<MovieDatabase>
     private var listMovieDetailDatabase = mutableListOf<MovieDetail>()
     private lateinit var movieDetail: MovieDetail
-
-    var isIOException = false
+    var shouldReturnIOException = false
 
     override fun getMovies() = flow {
         val pagingData = PagingData.from(listMovieDatabase)
@@ -22,7 +21,7 @@ class FakeMoviesRepository : MoviesRepository {
     }
 
     override suspend fun getMovieById(movieId: Int): ApiResult<MovieDetail> {
-        return if (isIOException) ApiResult.Error(exception = IOException())
+        return if (shouldReturnIOException) ApiResult.Error(exception = IOException())
         else ApiResult.Success(data = movieDetail)
     }
 

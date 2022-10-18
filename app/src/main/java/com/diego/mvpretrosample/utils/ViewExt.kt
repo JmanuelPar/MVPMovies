@@ -12,35 +12,18 @@ import androidx.core.net.toUri
 import coil.load
 import com.diego.mvpretrosample.R
 import com.diego.mvpretrosample.utils.Constants.API_BACKDROP_BASE_URL
+import com.diego.mvpretrosample.utils.Constants.API_IMG_BASE_URL
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-fun TextView.setMovieDetail(item: String) {
-    text = item.ifEmpty { context.getString(R.string.not_specified) }
-}
+fun ImageView.setImage(img: String, baseUrl: Boolean) {
+    val path = if (baseUrl) API_IMG_BASE_URL else API_BACKDROP_BASE_URL
+    val imgUri = (path + img).toUri()
+        .buildUpon()
+        .scheme("https")
+        .build()
 
-fun TextView.setMovieDetailReleaseDate(item: String) {
-    text = try {
-        when {
-            item.isEmpty() -> context.getString(R.string.not_specified)
-            else -> {
-                val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.FRANCE)
-                LocalDate.parse(item, DateTimeFormatter.ISO_DATE).format(formatter)
-            }
-        }
-    } catch (e: Exception) {
-        context.getString(R.string.not_specified)
-    }
-}
-
-fun TextView.setMovieDetailRating(rating: Double) {
-    text = if (rating == -1.0) context.getString(R.string.not_rated) else rating.toString()
-}
-
-fun ImageView.setMovieDetailImage(movieDetailImage: String) {
-    val imgUri = (API_BACKDROP_BASE_URL + movieDetailImage).toUri()
-        .buildUpon().scheme("https").build()
     this.load(imgUri) {
         crossfade(true)
         listener(
@@ -58,6 +41,32 @@ fun ImageView.setMovieDetailImage(movieDetailImage: String) {
         )
     }
 }
+
+fun TextView.setItem(item: String) {
+    text = item.ifEmpty { context.getString(R.string.not_specified) }
+}
+
+fun TextView.setReleaseDate(releaseDate: String) {
+    text = try {
+        when {
+            releaseDate.isEmpty() -> context.getString(R.string.not_specified)
+            else -> {
+                val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.FRANCE)
+                LocalDate.parse(
+                    releaseDate,
+                    DateTimeFormatter.ISO_DATE
+                ).format(formatter)
+            }
+        }
+    } catch (e: Exception) {
+        context.getString(R.string.not_specified)
+    }
+}
+
+fun TextView.setRating(rating: Double) {
+    text = if (rating == -1.0) context.getString(R.string.not_rated) else rating.toString()
+}
+
 
 @ColorInt
 @SuppressLint("Recycle")

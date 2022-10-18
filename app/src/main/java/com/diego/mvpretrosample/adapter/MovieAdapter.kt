@@ -5,8 +5,13 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.diego.mvpretrosample.R
 import com.diego.mvpretrosample.data.Movie
 import com.diego.mvpretrosample.databinding.ItemMovieCardBinding
+import com.diego.mvpretrosample.utils.setImage
+import com.diego.mvpretrosample.utils.setItem
+import com.diego.mvpretrosample.utils.setRating
+import com.diego.mvpretrosample.utils.setReleaseDate
 
 class MovieAdapter(private val clickListener: MovieListener) :
     PagingDataAdapter<Movie, MovieAdapter.MovieViewHolder>(MOVIE_DIFF_CALLBACK) {
@@ -24,9 +29,22 @@ class MovieAdapter(private val clickListener: MovieListener) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Movie, listener: MovieListener) {
-            binding.movie = item
-            binding.listener = listener
-            binding.executePendingBindings()
+            binding.apply {
+                movieImg.setImage(item.posterPath, true)
+                movieTitle.setItem(item.title)
+                movieReleaseDate.setReleaseDate(item.releaseDate)
+                movieRating.setRating(item.rating)
+                cardView.setOnClickListener { view ->
+                    listener.onMovieClicked(
+                        view = view,
+                        movie = item
+                    )
+                }
+                cardView.transitionName = String.format(
+                    cardView.context.getString(R.string.movie_card_transition_name),
+                    item.idMovie
+                )
+            }
         }
 
         companion object {

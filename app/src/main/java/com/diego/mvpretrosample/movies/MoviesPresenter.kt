@@ -7,7 +7,7 @@ import com.diego.mvpretrosample.repository.MoviesRepository
 import com.diego.mvpretrosample.utils.transformAsMovie
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -16,10 +16,11 @@ import kotlin.coroutines.CoroutineContext
 class MoviesPresenter(
     private val repository: MoviesRepository,
     private val view: MoviesContract.View,
-    context: CoroutineContext = Dispatchers.Main.immediate
+    contextIO: CoroutineContext = Dispatchers.IO
 ) : MoviesContract.Presenter {
 
-    private val scope: CoroutineScope = CoroutineScope(context + SupervisorJob())
+    private val scope: CoroutineScope = CoroutineScope(contextIO + Job())
+
     private lateinit var currentMoviesResult: Flow<PagingData<Movie>>
 
     init {
