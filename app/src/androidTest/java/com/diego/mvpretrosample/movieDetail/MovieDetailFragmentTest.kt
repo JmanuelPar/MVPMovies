@@ -93,7 +93,7 @@ class MovieDetailFragmentTest {
     @Test
     fun movieDetail_Error_DisplayedInUi() = runTest {
         // No save MovieDetail in local database
-        repository.isIOException = true
+        repository.shouldReturnIOException = true
 
         // IOException
         val errorMessageUi = context.getString(R.string.no_connect_message)
@@ -116,7 +116,7 @@ class MovieDetailFragmentTest {
     fun movieDetail_AfterError_DisplayedInUi() = runTest {
         // Save MovieDetail in local database
         repository.addMovieDetailDatabase(movieDetail)
-        repository.isIOException = true
+        repository.shouldReturnIOException = true
 
         val bundle = MovieDetailFragmentArgs(movieId).toBundle()
         launchFragmentInContainer<MovieDetailFragment>(

@@ -81,13 +81,13 @@ class MovieDetailFragment : Fragment(), MovieDetailContract.View {
 
     override fun showMovieDetail(movieDetail: MovieDetail) {
         binding.apply {
-            movieDetailImg.setMovieDetailImage(movieDetail.backdropPath)
-            movieDetailRating.setMovieDetailRating(movieDetail.rating)
-            movieDetailTitle.setMovieDetail(movieDetail.title)
-            movieDetailReleaseDate.setMovieDetailReleaseDate(movieDetail.releaseDate)
-            movieDetailGenres.setMovieDetail(movieDetail.genres)
-            movieDetailTagline.setMovieDetail(movieDetail.tagLine)
-            movieDetailOverview.setMovieDetail(movieDetail.overview)
+            movieDetailImg.setImage(movieDetail.backdropPath, false)
+            movieDetailRating.setRating(movieDetail.rating)
+            movieDetailTitle.setItem(movieDetail.title)
+            movieDetailReleaseDate.setReleaseDate(movieDetail.releaseDate)
+            movieDetailGenres.setItem(movieDetail.genres)
+            movieDetailTagline.setItem(movieDetail.tagLine)
+            movieDetailOverview.setItem(movieDetail.overview)
         }
     }
 

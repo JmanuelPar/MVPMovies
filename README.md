@@ -6,8 +6,7 @@ A simple project to implement an MVP architecture, developed in kotlin
 
 API TMDB  
 Coil  
-Coroutines  
-Data binding   
+Coroutines   
 Material design  
 Moshi  
 MVP  
