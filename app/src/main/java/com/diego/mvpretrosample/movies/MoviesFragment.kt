@@ -8,8 +8,8 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
@@ -186,7 +186,7 @@ class MoviesFragment : Fragment(), MoviesContract.View, MovieListener {
         }
 
         val movieDetailCardTransitionName = getString(R.string.movie_detail_card_transition_name)
-        this.findNavController().navigate(
+        view.findNavController().navigate(
             directions = MoviesFragmentDirections
                 .actionFragmentMoviesToFragmentMovieDetail(movieId = movie.idMovie),
             navigatorExtras = FragmentNavigatorExtras(view to movieDetailCardTransitionName)
